@@ -1,0 +1,25 @@
+[00:00:04.392] Server  LOG     ✓ Ready in 3.3s
+[00:00:17.719] Server  LOG     API URL: "http://localhost:5000/api"
+[00:00:18.916] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:18.916] Browser LOG     API URL: http://localhost:5000/api
+[00:01:43.488] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:43.488] Browser LOG     API URL: http://localhost:5000/api
+[00:01:48.622] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:48.622] Browser LOG     API URL: http://localhost:5000/api
+[00:02:01.106] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:01.106] Browser LOG     API URL: http://localhost:5000/api
+[00:02:24.243] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:24.243] Browser LOG     API URL: http://localhost:5000/api
+[00:03:38.603] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:38.603] Browser LOG     API URL: http://localhost:5000/api
+[00:04:38.906] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:38.906] Browser LOG     API URL: http://localhost:5000/api
+[00:05:02.774] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:02.774] Browser LOG     API URL: http://localhost:5000/api
+[00:06:29.709] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:29.710] Browser LOG     API URL: http://localhost:5000/api
+[00:06:39.128] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:39.257] Browser LOG     API URL: http://localhost:5000/api
+[00:06:42.356] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:42.356] Browser LOG     API URL: http://localhost:5000/api
+[00:44:11.555] Server  LOG     ✓ Compiled in 1603ms
