@@ -31,3 +31,24 @@
 [03:44:53.337] Browser LOG     API URL: http://localhost:5000/api
 [05:00:59.199] Server  LOG     ✓ Compiled in 1885ms
 [05:01:02.473] Server  LOG     ✓ Compiled in 1188ms
+[05:27:31.613] Server  LOG     ✓ Compiled in 544ms
+[05:27:35.212] Server  ERROR   ⨯ Error: The default export is not a React Component in "/login/page"
+[05:27:36.165] Server  ERROR   ⨯ Error: The default export is not a React Component in "/login/page"
+[05:27:37.362] Server  LOG     API URL: "http://localhost:5000/api"
+[05:27:37.419] Server  LOG     ✓ Compiled in 752ms
+[05:27:41.599] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[05:27:41.966] Browser LOG     API URL: http://localhost:5000/api
+[05:27:42.803] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[05:27:43.399] Browser LOG     API URL: http://localhost:5000/api
+[05:29:30.538] Server  LOG     ✓ Compiled in 176ms
+[05:29:31.503] Server  LOG     ✓ Compiled in 121ms
+[05:36:44.827] Server  LOG     ✓ Compiled in 354ms
+[05:36:48.783] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[05:36:50.009] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[05:36:50.156] Server  LOG     ✓ Compiled in 0ms
+[05:36:52.075] Server  LOG     API URL: "http://localhost:5000/api"
+[05:36:52.493] Server  LOG     ✓ Compiled in 306ms
+[05:36:56.318] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[05:36:56.638] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[05:36:57.400] Browser LOG     API URL: http://localhost:5000/api
+[05:36:57.406] Browser LOG     API URL: http://localhost:5000/api
