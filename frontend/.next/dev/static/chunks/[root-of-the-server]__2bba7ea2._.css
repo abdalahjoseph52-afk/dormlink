@@ -422,6 +422,10 @@
     text-transform: capitalize;
   }
 
+  .uppercase {
+    text-transform: uppercase;
+  }
+
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;

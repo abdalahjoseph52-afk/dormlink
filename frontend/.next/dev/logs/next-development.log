@@ -52,3 +52,5 @@
 [05:36:56.638] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [05:36:57.400] Browser LOG     API URL: http://localhost:5000/api
 [05:36:57.406] Browser LOG     API URL: http://localhost:5000/api
+[05:55:44.351] Server  LOG     ✓ Compiled in 630ms
+[05:55:48.087] Server  LOG     ✓ Compiled in 450ms
