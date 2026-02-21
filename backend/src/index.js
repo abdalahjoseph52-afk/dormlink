@@ -12,7 +12,13 @@ const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://dormlink-nine.vercel.app',
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 
 // Routes
