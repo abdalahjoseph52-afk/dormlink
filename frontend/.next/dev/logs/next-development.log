@@ -54,3 +54,55 @@
 [05:36:57.406] Browser LOG     API URL: http://localhost:5000/api
 [05:55:44.351] Server  LOG     ✓ Compiled in 630ms
 [05:55:48.087] Server  LOG     ✓ Compiled in 450ms
+[08:24:19.660] Server  LOG     ✓ Compiled in 685ms
+[08:24:25.061] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:27.041] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:28.498] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:29.703] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:30.747] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:31.608] Server  ERROR   ⨯ Error: The default export is not a React Component in "/admin/dashboard/page"
+[08:24:31.706] Server  LOG     ✓ Compiled in 0ms
+[08:24:32.786] Server  LOG     ✓ Compiled in 382ms
+[08:24:33.110] Server  LOG     API URL: "http://localhost:5000/api"
+[08:24:33.973] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[08:24:33.974] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[08:24:34.494] Browser LOG     API URL: http://localhost:5000/api
+[08:24:34.628] Browser LOG     API URL: http://localhost:5000/api
+[08:24:35.403] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/admin/das..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/Desktop/d...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="inter_396b12ce-module__rRjk0G__className"
+-                           data-new-gr-c-s-check-loaded="14.1274.0"
+-                           data-gr-ext-installed=""
+                          >
+                  ...
+

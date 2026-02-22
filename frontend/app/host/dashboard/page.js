@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -6,537 +7,623 @@ import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-const AMENITY_ICONS = {
-  'WiFi':'wifi','Water':'water_drop','Security':'security','Kitchen':'kitchen',
-  'Parking':'local_parking','Laundry':'local_laundry_service','Generator':'bolt',
-  'CCTV':'videocam','Gym':'fitness_center','Study Room':'menu_book',
-  'Cleaning':'cleaning_services','Air Conditioning':'ac_unit','Hot Shower':'shower',
-  'Furnished':'chair','Garden':'park','Elevator':'elevator',
+const AMENITIES = ['WiFi','Water','Security','Kitchen','Parking','Laundry','Generator','CCTV','Gym','Study Room','Hot Shower','Furnished'];
+const ROOM_TYPES = ['Single Room','Double Room','Triple Room','Quad Room','Self Contained','Studio'];
+const ROOM_CAPS  = { 'Single Room':1,'Double Room':2,'Triple Room':3,'Quad Room':4,'Self Contained':2,'Studio':1 };
+
+const STATUS = {
+  pending:              { bg:'#fef3c7', color:'#92400e', dot:'#f59e0b', label:'Pending' },
+  confirmed:            { bg:'#d1fae5', color:'#065f46', dot:'#10b981', label:'Confirmed' },
+  cancelled:            { bg:'#fee2e2', color:'#991b1b', dot:'#ef4444', label:'Cancelled' },
+  unpaid:               { bg:'#fee2e2', color:'#991b1b', dot:'#ef4444', label:'Unpaid' },
+  pending_confirmation: { bg:'#fef3c7', color:'#92400e', dot:'#f59e0b', label:'Verifying' },
+  paid:                 { bg:'#d1fae5', color:'#065f46', dot:'#10b981', label:'Paid' },
+  approved:             { bg:'#d1fae5', color:'#065f46', dot:'#10b981', label:'Live' },
+  rejected:             { bg:'#fee2e2', color:'#991b1b', dot:'#ef4444', label:'Rejected' },
 };
 
-const ROOM_TYPES = [
-  { value:'Single Room', icon:'bed', desc:'1 person' },
-  { value:'2 Person Shared', icon:'bedroom_parent', desc:'2 persons' },
-  { value:'3 Person Shared', icon:'bedroom_child', desc:'3 persons' },
-  { value:'4 Person Shared', icon:'group', desc:'4 persons' },
-  { value:'Self Contained', icon:'home', desc:'Private bathroom' },
-  { value:'Studio', icon:'apartment', desc:'Full unit' },
-];
+const Badge = ({ s }) => {
+  const st = STATUS[s] || STATUS.pending;
+  return (
+    <span style={{display:'inline-flex',alignItems:'center',gap:'5px',background:st.bg,color:st.color,padding:'3px 9px',borderRadius:'20px',fontSize:'11px',fontWeight:'600',whiteSpace:'nowrap'}}>
+      <span style={{width:'5px',height:'5px',borderRadius:'50%',background:st.dot,display:'inline-block'}}/>
+      {st.label}
+    </span>
+  );
+};
+
+const Btn = ({ children, color='gray', onClick, disabled, style={} }) => {
+  const colors = {
+    gray:  { bg:'#f1f5f9', hover:'#e2e8f0', color:'#475569' },
+    blue:  { bg:'#dbeafe', hover:'#bfdbfe', color:'#1e3a8a' },
+    green: { bg:'#d1fae5', hover:'#a7f3d0', color:'#065f46' },
+    red:   { bg:'#fee2e2', hover:'#fecaca', color:'#991b1b' },
+    dark:  { bg:'#0f172a', hover:'#1e293b', color:'white' },
+  };
+  const c = colors[color] || colors.gray;
+  return (
+    <button onClick={onClick} disabled={disabled}
+      style={{border:'none',padding:'5px 11px',borderRadius:'6px',fontSize:'11px',fontWeight:'600',cursor:disabled?'not-allowed':'pointer',fontFamily:'Inter,sans-serif',background:c.bg,color:c.color,display:'inline-flex',alignItems:'center',gap:'3px',whiteSpace:'nowrap',opacity:disabled?0.5:1,transition:'all 0.15s',...style}}>
+      {children}
+    </button>
+  );
+};
+
+const Input = ({ label, hint, ...props }) => (
+  <div style={{marginBottom:'14px'}}>
+    <label style={{display:'block',fontSize:'12px',fontWeight:'600',color:'#374151',marginBottom:'5px'}}>
+      {label}{hint && <span style={{fontWeight:'400',color:'#94a3b8'}}> — {hint}</span>}
+    </label>
+    <input style={{width:'100%',border:'1.5px solid #e2e8f0',borderRadius:'8px',padding:'9px 12px',fontSize:'13px',fontFamily:'Inter,sans-serif',outline:'none',background:'#f9fafb',color:'#0f172a',transition:'border 0.15s'}} {...props}/>
+  </div>
+);
+
+const Textarea = ({ label, ...props }) => (
+  <div style={{marginBottom:'14px'}}>
+    <label style={{display:'block',fontSize:'12px',fontWeight:'600',color:'#374151',marginBottom:'5px'}}>{label}</label>
+    <textarea style={{width:'100%',border:'1.5px solid #e2e8f0',borderRadius:'8px',padding:'9px 12px',fontSize:'13px',fontFamily:'Inter,sans-serif',outline:'none',background:'#f9fafb',color:'#0f172a',resize:'vertical',minHeight:'72px'}} {...props}/>
+  </div>
+);
+
+function Modal({ title, big, children, onClose }) {
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.55)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px',backdropFilter:'blur(4px)'}} onClick={onClose}>
+      <div style={{background:'white',borderRadius:'14px',width:'100%',maxWidth: big ? '620px' : '400px',overflow:'hidden',boxShadow:'0 20px 60px rgba(0,0,0,0.2)'}} onClick={e=>e.stopPropagation()}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'15px 18px',borderBottom:'1px solid #f1f5f9'}}>
+          <span style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>{title}</span>
+          <button onClick={onClose} style={{background:'#f1f5f9',border:'none',width:'26px',height:'26px',borderRadius:'6px',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#64748b'}}>
+            <span className="material-icons-round" style={{fontSize:'17px'}}>close</span>
+          </button>
+        </div>
+        <div style={{padding:'18px',maxHeight:'80vh',overflowY:'auto'}}>{children}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function HostDashboard() {
   const { user, logout, loading } = useAuth();
   const router = useRouter();
-  const [hostels, setHostels] = useState([]);
-  const [bookings, setBookings] = useState([]);
-  const [universities, setUniversities] = useState([]);
+  const [hostels, setHostels]       = useState([]);
+  const [bookings, setBookings]     = useState([]);
+  const [tab, setTab]               = useState('hostels');
+  const [roomView, setRoomView]     = useState(null);
+  const [sideOpen, setSideOpen]     = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('properties');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showHostelModal, setShowHostelModal] = useState(false);
-  const [showRoomModal, setShowRoomModal] = useState(false);
-  const [selectedHostel, setSelectedHostel] = useState(null);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const [selectedUnis, setSelectedUnis] = useState([]);
-  const [formLoading, setFormLoading] = useState(false);
-  const [hostelForm, setHostelForm] = useState({ name:'',description:'',address:'',city:'',university_id:'',distance_from_university:'' });
-  const [roomForm, setRoomForm] = useState({ room_type:'',price_per_semester:'',capacity:'',available_count:'',description:'' });
+  const [actionLoading, setActionLoading] = useState(false);
+  const [modal, setModal]           = useState(null);
+  const [deletePw, setDeletePw]     = useState('');
+
+  const emptyHostel = { name:'', city:'', address:'', description:'', university_id:'', distance_from_university:'', amenities:[], transport_notes:'', latitude:'', longitude:'' };
+  const emptyRoom   = { room_label:'', room_type:'Single Room', floor:'', capacity:1, price_per_semester:'', available_count:1, description:'', features:[], is_full:false };
+
+  const [hForm, setHForm] = useState(emptyHostel);
+  const [rForm, setRForm] = useState(emptyRoom);
 
   useEffect(() => {
     if (loading) return;
-    if (!user) { router.push('/login'); return; }
-    if (user.role !== 'host') { router.push('/login'); return; }
-    fetchData();
+    if (!user || user.role !== 'host') { router.push('/login'); return; }
+    fetchAll();
   }, [user, loading]);
 
-  const fetchData = async () => {
+  const fetchAll = async () => {
+    setDataLoading(true);
     try {
-      const [h, b, u] = await Promise.all([
-        api.get('/hostels/my/listings'),
-        api.get('/bookings/host'),
-        api.get('/hostels/universities'),
+      const [h, b] = await Promise.all([
+        api.get('/host/hostels'),
+        api.get('/host/bookings').catch(() => ({ data: { bookings: [] } })),
       ]);
       setHostels(h.data.hostels || []);
       setBookings(b.data.bookings || []);
-      setUniversities(u.data.universities || []);
     } catch (e) { console.error(e); }
     finally { setDataLoading(false); }
   };
 
-  const toggleAmenity = (a) => setSelectedAmenities(p => p.includes(a) ? p.filter(x=>x!==a) : [...p,a]);
-  const toggleUni = (id) => {
-    setSelectedUnis(p => p.includes(id) ? p.filter(x=>x!==id) : [...p,id]);
-    if (!hostelForm.university_id) setHostelForm(f=>({...f,university_id:id}));
-  };
-
-  const submitHostel = async (e) => {
-    e.preventDefault();
-    if (!hostelForm.university_id) { toast.error('Please select at least one university'); return; }
-    setFormLoading(true);
+  const saveHostel = async () => {
+    if (!hForm.name || !hForm.city || !hForm.address) { toast.error('Name, city and address required'); return; }
+    setActionLoading(true);
     try {
-      await api.post('/hostels', { ...hostelForm, amenities: selectedAmenities });
-      toast.success('Property submitted for admin approval!');
-      setShowHostelModal(false);
-      setHostelForm({ name:'',description:'',address:'',city:'',university_id:'',distance_from_university:'' });
-      setSelectedAmenities([]); setSelectedUnis([]);
-      fetchData();
-    } catch (e) { toast.error(e.response?.data?.error || 'Failed to submit'); }
-    finally { setFormLoading(false); }
+      if (modal?.hostelId) { await api.patch(`/host/hostels/${modal.hostelId}`, hForm); toast.success('Hostel updated'); }
+      else { await api.post('/host/hostels', hForm); toast.success('Submitted for admin review!'); }
+      fetchAll(); setModal(null);
+    } catch (e) { toast.error(e.response?.data?.error || 'Failed'); }
+    finally { setActionLoading(false); }
   };
 
-  const submitRoom = async (e) => {
-    e.preventDefault();
-    if (!roomForm.room_type) { toast.error('Please select a room type'); return; }
-    setFormLoading(true);
+  const saveRoom = async () => {
+    if (!rForm.room_label || !rForm.price_per_semester) { toast.error('Room label and price required'); return; }
+    setActionLoading(true);
     try {
-      await api.post(`/hostels/${selectedHostel.id}/rooms`, {
-        room_type: roomForm.room_type,
-        price_per_semester: parseFloat(roomForm.price_per_semester),
-        price_per_month: parseFloat(roomForm.price_per_semester) / 4,
-        capacity: parseInt(roomForm.capacity),
-        available_count: parseInt(roomForm.available_count),
-        description: roomForm.description,
-      });
-      toast.success('Room added!');
-      setShowRoomModal(false);
-      setRoomForm({ room_type:'',price_per_semester:'',capacity:'',available_count:'',description:'' });
-      fetchData();
-    } catch (e) { toast.error(e.response?.data?.error || 'Failed to add room'); }
-    finally { setFormLoading(false); }
+      if (modal?.roomId) { await api.patch(`/host/rooms/${modal.roomId}`, rForm); toast.success('Room updated'); }
+      else { await api.post(`/host/hostels/${modal.forHostel}/rooms`, rForm); toast.success('Room added!'); }
+      fetchAll(); setModal(null);
+    } catch (e) { toast.error(e.response?.data?.error || 'Failed'); }
+    finally { setActionLoading(false); }
   };
 
-  const handleBooking = async (id, status) => {
+  const removeRoom = async (id) => {
+    if (!confirm('Delete this room? This cannot be undone.')) return;
+    setActionLoading(true);
+    try { await api.delete(`/host/rooms/${id}`); toast.success('Room deleted'); fetchAll(); }
+    catch (e) { toast.error(e.response?.data?.error || 'Failed'); }
+    finally { setActionLoading(false); }
+  };
+
+  const doBooking = async (id, action) => {
+    setActionLoading(true);
     try {
-      await api.patch(`/bookings/${id}/review`, { status });
-      toast.success(`Booking ${status}`); fetchData();
-    } catch (e) { toast.error('Failed'); }
+      await api.patch(`/host/bookings/${id}/${action}`);
+      toast.success(action === 'confirm' ? 'Booking confirmed! Student notified.' : 'Booking rejected');
+      fetchAll();
+    } catch (e) { toast.error(e.response?.data?.error || 'Failed'); }
+    finally { setActionLoading(false); }
   };
 
-  const handlePayment = async (id, action) => {
-    try {
-      await api.patch(`/payments/${action}/${id}`, { reason: 'Transaction not found' });
-      toast.success(action === 'confirm' ? 'Payment confirmed!' : 'Payment rejected');
-      fetchData();
-    } catch (e) { toast.error('Failed'); }
+  const doDeleteAccount = async () => {
+    if (!deletePw) { toast.error('Enter password'); return; }
+    setActionLoading(true);
+    try { await api.delete('/host/account', { data: { password: deletePw } }); logout(); router.push('/'); }
+    catch (e) { toast.error(e.response?.data?.error || 'Failed'); }
+    finally { setActionLoading(false); }
   };
 
-  const statusStyle = (s) => ({
-    pending:   { bg:'#fef9c3', color:'#854d0e' },
-    confirmed: { bg:'#dcfce7', color:'#166534' },
-    cancelled: { bg:'#fee2e2', color:'#991b1b' },
-    approved:  { bg:'#dcfce7', color:'#166534' },
-    rejected:  { bg:'#fee2e2', color:'#991b1b' },
-  }[s] || { bg:'#f1f5f9', color:'#475569' });
+  const pendingB = bookings.filter(b => b.status === 'pending');
+  const selectedHostel = hostels.find(h => h.id === roomView);
 
-  const pendingPayments = bookings.filter(b => b.payment_status === 'pending_confirmation');
-
-  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh'}}><div style={{width:'32px',height:'32px',border:'3px solid #bfdbfe',borderTop:'3px solid #2563eb',borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style></div>;
+  if (loading) return (
+    <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',background:'#f8fafc'}}>
+      <div style={{width:'28px',height:'28px',border:'2px solid #e2e8f0',borderTop:'2px solid #2563eb',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
+    </div>
+  );
 
   return (
     <>
-      <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
       <style>{`
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'DM Sans',sans-serif;background:#f8fafc;}
-        .layout{display:flex;min-height:100vh;}
-        .sidebar{width:256px;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform 0.3s;}
-        .sidebar-logo{display:flex;align-items:center;gap:10px;padding:24px 20px;border-bottom:1px solid #e2e8f0;text-decoration:none;}
-        .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .logo-text{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#2563eb;}
-        .sidebar-nav{padding:16px 12px;flex:1;overflow-y:auto;}
-        .nav-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;padding:0 8px;margin:16px 0 8px;}
-        .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:all 0.15s;margin-bottom:2px;width:100%;border:none;background:none;font-family:'DM Sans',sans-serif;cursor:pointer;}
-        .nav-item:hover{background:#f1f5f9;color:#0f172a;}
-        .nav-item.active{background:#eff6ff;color:#2563eb;font-weight:600;}
-        .sidebar-bottom{padding:16px;border-top:1px solid #e2e8f0;}
-        .user-card{display:flex;align-items:center;gap:10px;padding:12px;background:#f8fafc;border-radius:12px;margin-bottom:10px;}
-        .user-avatar{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;}
-        .user-name{font-size:13px;font-weight:600;color:#0f172a;}
-        .user-role{font-size:11px;color:#94a3b8;}
-        .btn-logout{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:none;border:1.5px solid #e2e8f0;padding:9px;border-radius:10px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
-        .btn-logout:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2;}
-        .main{margin-left:256px;flex:1;}
-        .topbar{background:white;border-bottom:1px solid #e2e8f0;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
-        .topbar-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:#0f172a;}
-        .hamburger{display:none;background:none;border:none;cursor:pointer;color:#0f172a;}
-        .content{padding:32px;}
-        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
-        .stat-card{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:20px;}
-        .stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
-        .stat-num{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#0f172a;}
-        .stat-label{font-size:13px;color:#64748b;margin-top:2px;}
-        .tabs{display:flex;gap:4px;background:#f1f5f9;border-radius:12px;padding:4px;margin-bottom:24px;width:fit-content;}
-        .tab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;background:none;color:#64748b;transition:all 0.15s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
-        .tab.active{background:white;color:#2563eb;box-shadow:0 1px 6px rgba(0,0,0,0.08);}
-        .badge-count{background:#ef4444;color:white;border-radius:50px;padding:1px 7px;font-size:10px;font-weight:700;}
-        .btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;text-decoration:none;}
-        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,0.25);}
-        .table-wrap{background:white;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
-        .table{width:100%;border-collapse:collapse;}
-        .table th{text-align:left;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;padding:14px 20px;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
-        .table td{padding:14px 20px;font-size:14px;color:#475569;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
-        .table tr:last-child td{border-bottom:none;}
-        .badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:50px;font-size:11px;font-weight:700;}
-        .action-btns{display:flex;gap:6px;flex-wrap:wrap;}
-        .btn-sm{border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
-        .btn-confirm{background:#dcfce7;color:#166534;}
-        .btn-confirm:hover{background:#bbf7d0;}
-        .btn-cancel{background:#fee2e2;color:#991b1b;}
-        .btn-cancel:hover{background:#fecaca;}
-        .btn-add{background:#eff6ff;color:#1e40af;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
-        .empty-cell{text-align:center;padding:60px;color:#94a3b8;font-size:14px;}
-        .txid{font-family:monospace;font-size:12px;background:#f1f5f9;padding:3px 8px;border-radius:6px;color:#0f172a;}
-        /* MODAL */
-        .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(4px);}
-        .modal{background:white;border-radius:20px;padding:32px;width:100%;max-width:580px;margin:auto;position:relative;}
-        .modal-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#0f172a;margin-bottom:4px;}
-        .modal-sub{font-size:14px;color:#64748b;margin-bottom:24px;}
-        .modal-close{position:absolute;top:20px;right:20px;background:#f1f5f9;border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;}
-        .modal-close:hover{background:#e2e8f0;}
-        .sec-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid #e2e8f0;}
-        .form-group{margin-bottom:14px;}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-        .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-        .form-label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;}
-        .form-hint{font-size:11px;color:#94a3b8;margin-top:3px;}
-        .form-input,.form-select,.form-textarea{width:100%;border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0f172a;outline:none;transition:all 0.2s;background:#f9fafb;}
-        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#2563eb;background:white;box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
-        .form-textarea{min-height:72px;resize:vertical;}
-        .amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px;}
-        .amenity-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:#f9fafb;}
-        .amenity-chip:hover{border-color:#93c5fd;}
-        .amenity-chip.selected{border-color:#2563eb;background:#eff6ff;}
-        .amenity-chip-label{font-size:10px;font-weight:500;color:#64748b;text-align:center;}
-        .amenity-chip.selected .amenity-chip-label{color:#1e40af;}
-        .room-types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-        .room-type-card{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 8px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:#f9fafb;}
-        .room-type-card:hover{border-color:#93c5fd;}
-        .room-type-card.selected{border-color:#2563eb;background:#eff6ff;}
-        .room-type-label{font-size:12px;font-weight:700;color:#0f172a;text-align:center;}
-        .room-type-desc{font-size:10px;color:#94a3b8;}
-        .unis-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-        .uni-chip{display:flex;align-items:center;gap:8px;padding:10px 12px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:#64748b;transition:all 0.15s;background:#f9fafb;}
-        .uni-chip:hover{border-color:#93c5fd;}
-        .uni-chip.selected{border-color:#2563eb;background:#eff6ff;color:#1e40af;}
-        .uni-check{width:18px;height:18px;border:2px solid #e2e8f0;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
-        .uni-chip.selected .uni-check{background:#2563eb;border-color:#2563eb;}
-        .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:16px;border-top:1px solid #e2e8f0;}
-        .btn-cancel-modal{background:#f1f5f9;color:#475569;border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
-        .btn-submit-modal{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
-        .btn-submit-modal:disabled{opacity:0.6;cursor:not-allowed;}
-        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;}
-        .payment-row td{background:#fffbeb!important;}
-        @media(max-width:1024px){.stats{grid-template-columns:repeat(2,1fr);}}
+        body{font-family:'Inter',sans-serif;background:#f8fafc;color:#0f172a;font-size:14px;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+        .sidebar{width:236px;background:white;border-right:1px solid #f1f5f9;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform 0.25s cubic-bezier(.4,0,.2,1);}
+        .tbl th{text-align:left;font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.5px;text-transform:uppercase;padding:10px 16px;background:#fafafa;border-bottom:1px solid #f1f5f9;white-space:nowrap;}
+        .tbl td{padding:12px 16px;border-bottom:1px solid #f9fafb;vertical-align:middle;}
+        .tbl{width:100%;border-collapse:collapse;}
+        .tbl tr:last-child td{border-bottom:none;}
+        .tbl tr:hover td{background:#fafafa;}
+        .tbl tr.hl td{background:#fffbeb;}
+        .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
         @media(max-width:768px){
           .sidebar{transform:translateX(-100%);}
           .sidebar.open{transform:translateX(0);}
-          .overlay{display:block;}
-          .main{margin-left:0;}
-          .hamburger{display:flex;}
-          .content{padding:20px 16px;}
-          .topbar{padding:0 16px;}
-          .stats{grid-template-columns:repeat(2,1fr);gap:12px;}
-          .table{font-size:13px;}
-          .table th,.table td{padding:10px 12px;}
-          .tabs{overflow-x:auto;width:100%;}
-          .amenities-grid{grid-template-columns:repeat(3,1fr);}
-          .form-row{grid-template-columns:1fr;}
-          .form-row-3{grid-template-columns:1fr 1fr;}
+          .main-area{margin-left:0!important;}
+          .hamburger{display:flex!important;}
+          .content{padding:14px!important;}
+          .topbar{padding:0 14px!important;}
+          .stats-row{grid-template-columns:repeat(2,1fr)!important;}
+          .tbl-wrap{display:none;}
+          .m-cards{display:block!important;}
+          .rooms-grid{grid-template-columns:repeat(2,1fr)!important;}
+          .form-g2{grid-template-columns:1fr!important;}
+          .form-g3{grid-template-columns:1fr 1fr!important;}
         }
-        @keyframes spin{to{transform:rotate(360deg);}}
+        @media(max-width:420px){.rooms-grid{grid-template-columns:1fr!important;}}
       `}</style>
 
-      <div className="layout">
-        {sidebarOpen && <div className="overlay" onClick={() => setSidebarOpen(false)}/>}
+      <div style={{display:'flex',minHeight:'100vh'}}>
+        {sideOpen && <div onClick={() => setSideOpen(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.4)',zIndex:99,backdropFilter:'blur(2px)'}}/>}
 
-        <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <Link href="/" className="sidebar-logo" onClick={() => setSidebarOpen(false)}>
-            <div className="logo-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 22V12h6v10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+        {/* SIDEBAR */}
+        <aside className={`sidebar ${sideOpen ? 'open' : ''}`}>
+          <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'18px 16px 14px',borderBottom:'1px solid #f8fafc'}}>
+            <div style={{width:'28px',height:'28px',background:'linear-gradient(135deg,#1d4ed8,#2563eb)',borderRadius:'7px',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 22V12h6v10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
-            <span className="logo-text">DormLink</span>
-          </Link>
-          <div className="sidebar-nav">
-            <div className="nav-label">Menu</div>
+            <span style={{fontSize:'15px',fontWeight:'700',color:'#0f172a',letterSpacing:'-0.3px'}}>DormLink</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:'10px',padding:'14px 16px',borderBottom:'1px solid #f8fafc'}}>
+            <div style={{width:'34px',height:'34px',background:'linear-gradient(135deg,#d1fae5,#a7f3d0)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'12px',fontWeight:'700',color:'#065f46',flexShrink:0}}>
+              {user?.first_name?.[0]}{user?.last_name?.[0]}
+            </div>
+            <div>
+              <div style={{fontSize:'13px',fontWeight:'600',color:'#0f172a'}}>{user?.first_name} {user?.last_name}</div>
+              <div style={{fontSize:'10px',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.5px'}}>Host</div>
+            </div>
+          </div>
+          <nav style={{padding:'10px 8px',flex:1}}>
             {[
-              {label:'Dashboard',icon:'dashboard',tab:'properties'},
-              {label:'Bookings',icon:'book_online',tab:'bookings'},
-              {label:'Payments',icon:'payments',tab:'payments'},
+              { id:'hostels',  icon:'apartment',      label:'My Properties' },
+              { id:'bookings', icon:'receipt_long',   label:'Bookings', count: pendingB.length },
+              { id:'account',  icon:'manage_accounts',label:'Account' },
             ].map(n => (
-              <button key={n.tab} className={`nav-item ${activeTab===n.tab?'active':''}`}
-                onClick={() => { setActiveTab(n.tab); setSidebarOpen(false); }}>
-                <span className="material-icons-round" style={{fontSize:'20px'}}>{n.icon}</span>
-                {n.label}
-                {n.tab==='payments' && pendingPayments.length>0 && (
-                  <span className="badge-count" style={{marginLeft:'auto'}}>{pendingPayments.length}</span>
-                )}
+              <button key={n.id} onClick={() => { setTab(n.id); setRoomView(null); setSideOpen(false); }}
+                style={{display:'flex',alignItems:'center',gap:'8px',width:'100%',padding:'9px 10px',borderRadius:'8px',border:'none',background: tab===n.id&&!roomView ? '#eff6ff' : 'none',fontFamily:'Inter,sans-serif',fontSize:'13px',fontWeight: tab===n.id&&!roomView ? '600' : '500',color: tab===n.id&&!roomView ? '#1d4ed8' : '#64748b',cursor:'pointer',textAlign:'left',marginBottom:'2px',transition:'all 0.15s'}}>
+                <span className="material-icons-round" style={{fontSize:'17px'}}>{n.icon}</span>
+                <span style={{flex:1}}>{n.label}</span>
+                {n.count > 0 && <span style={{background:'#ef4444',color:'white',borderRadius:'20px',padding:'1px 6px',fontSize:'10px',fontWeight:'700'}}>{n.count}</span>}
               </button>
             ))}
-            <Link href="/" className="nav-item" onClick={() => setSidebarOpen(false)}>
-              <span className="material-icons-round" style={{fontSize:'20px'}}>home</span>
-              Browse Listings
-            </Link>
-          </div>
-          <div className="sidebar-bottom">
-            <div className="user-card">
-              <div className="user-avatar">{user?.first_name?.[0]}{user?.last_name?.[0]}</div>
-              <div>
-                <div className="user-name">{user?.first_name} {user?.last_name}</div>
-                <div className="user-role">Property Host</div>
-              </div>
-            </div>
-            <button className="btn-logout" onClick={logout}>
-              <span className="material-icons-round" style={{fontSize:'16px'}}>logout</span>Sign Out
+          </nav>
+          <div style={{padding:'12px',borderTop:'1px solid #f8fafc'}}>
+            <button onClick={logout} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'6px',width:'100%',background:'none',border:'1px solid #f1f5f9',padding:'8px',borderRadius:'8px',fontSize:'12px',fontWeight:'500',color:'#94a3b8',cursor:'pointer',fontFamily:'Inter,sans-serif',transition:'all 0.15s'}}>
+              <span className="material-icons-round" style={{fontSize:'15px'}}>logout</span>
+              Sign out
             </button>
           </div>
         </aside>
 
-        <main className="main">
-          <div className="topbar">
-            <button className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <span className="material-icons-round" style={{fontSize:'24px'}}>menu</span>
-            </button>
-            <div className="topbar-title">Host Dashboard</div>
-            <button className="btn-primary" onClick={() => setShowHostelModal(true)}>
-              <span className="material-icons-round" style={{fontSize:'16px'}}>add</span>
-              Add Property
-            </button>
-          </div>
-
-          <div className="content">
-            <div className="stats">
-              {[
-                {icon:'apartment',color:'#eff6ff',iconColor:'#2563eb',num:hostels.length,label:'Properties'},
-                {icon:'check_circle',color:'#dcfce7',iconColor:'#16a34a',num:hostels.filter(h=>h.status==='approved').length,label:'Approved'},
-                {icon:'book_online',color:'#fef9c3',iconColor:'#ca8a04',num:bookings.length,label:'Bookings'},
-                {icon:'payments',color:'#fef2f2',iconColor:'#dc2626',num:pendingPayments.length,label:'Pending Payments'},
-              ].map((s,i) => (
-                <div key={i} className="stat-card">
-                  <div className="stat-icon" style={{background:s.color}}>
-                    <span className="material-icons-round" style={{color:s.iconColor,fontSize:'22px'}}>{s.icon}</span>
-                  </div>
-                  <div className="stat-num">{s.num}</div>
-                  <div className="stat-label">{s.label}</div>
+        {/* MAIN */}
+        <main className="main-area" style={{marginLeft:'236px',flex:1,display:'flex',flexDirection:'column'}}>
+          <header className="topbar" style={{background:'white',borderBottom:'1px solid #f1f5f9',height:'54px',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px',position:'sticky',top:0,zIndex:50}}>
+            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+              <button className="hamburger" onClick={() => setSideOpen(true)} style={{display:'none',background:'none',border:'none',cursor:'pointer',color:'#64748b',padding:'2px'}}>
+                <span className="material-icons-round">menu</span>
+              </button>
+              {roomView ? (
+                <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                  <button onClick={() => setRoomView(null)} style={{display:'flex',alignItems:'center',background:'#f1f5f9',border:'none',borderRadius:'7px',padding:'5px',cursor:'pointer',color:'#475569',transition:'all 0.15s'}}>
+                    <span className="material-icons-round" style={{fontSize:'16px'}}>arrow_back</span>
+                  </button>
+                  <span style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>{selectedHostel?.name} — Rooms</span>
                 </div>
-              ))}
+              ) : (
+                <span style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>
+                  {tab==='hostels'?'My Properties':tab==='bookings'?'Bookings':'Account'}
+                </span>
+              )}
             </div>
+            {tab==='hostels' && !roomView && (
+              <button onClick={() => { setHForm(emptyHostel); setModal({ type:'hostel' }); }}
+                style={{display:'inline-flex',alignItems:'center',gap:'6px',background:'#0f172a',color:'white',padding:'8px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',border:'none',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+                <span className="material-icons-round" style={{fontSize:'15px'}}>add</span>
+                Add Property
+              </button>
+            )}
+            {roomView && (
+              <button onClick={() => { setRForm(emptyRoom); setModal({ type:'room', forHostel: roomView }); }}
+                style={{display:'inline-flex',alignItems:'center',gap:'6px',background:'#0f172a',color:'white',padding:'8px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',border:'none',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+                <span className="material-icons-round" style={{fontSize:'15px'}}>add</span>
+                Add Room
+              </button>
+            )}
+          </header>
 
-            <div className="tabs">
-              {[{id:'properties',label:'Properties'},{id:'bookings',label:'Bookings'},{id:'payments',label:'Payments',count:pendingPayments.length}].map(t => (
-                <button key={t.id} className={`tab ${activeTab===t.id?'active':''}`} onClick={() => setActiveTab(t.id)}>
-                  {t.label}
-                  {t.count>0 && <span className="badge-count">{t.count}</span>}
-                </button>
-              ))}
-            </div>
+          <div className="content" style={{padding:'24px',flex:1,animation:'fadeIn 0.3s ease'}}>
 
-            {/* PROPERTIES */}
-            {activeTab==='properties' && (
-              <div className="table-wrap">
-                <table className="table">
-                  <thead><tr><th>Property</th><th>City</th><th>University</th><th>Rooms</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody>
-                    {dataLoading ? <tr><td colSpan="6" className="empty-cell">Loading...</td></tr>
-                    : hostels.length===0 ? <tr><td colSpan="6" className="empty-cell">No properties yet. Click Add Property above.</td></tr>
-                    : hostels.map(h => {
-                      const ss = statusStyle(h.status);
-                      return (
-                        <tr key={h.id}>
-                          <td style={{fontWeight:600,color:'#0f172a'}}>{h.name}</td>
-                          <td>{h.city}</td>
-                          <td>{h.universities?.name||'—'}</td>
-                          <td>{h.rooms?.length||0} types</td>
-                          <td><span className="badge" style={{background:ss.bg,color:ss.color}}>{h.status}</span></td>
-                          <td><button className="btn-add" onClick={() => { setSelectedHostel(h); setShowRoomModal(true); }}>+ Add Room</button></td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+            {/* STATS */}
+            {!roomView && (
+              <div className="stats-row" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px',marginBottom:'20px'}}>
+                {[
+                  { n: hostels.length, l:'Properties', icon:'apartment', s:'' },
+                  { n: hostels.filter(h=>h.status==='approved').length, l:'Live', icon:'check_circle', s:'good' },
+                  { n: bookings.length, l:'Bookings', icon:'receipt_long', s:'' },
+                  { n: pendingB.length, l:'Need Review', icon:'schedule', s: pendingB.length>0?'warn':'' },
+                ].map((s,i) => (
+                  <div key={i} style={{background: s.s==='good'?'#f0fdf4':s.s==='warn'?'#fffbeb':'white',border:`1px solid ${s.s==='good'?'#d1fae5':s.s==='warn'?'#fde68a':'#f1f5f9'}`,borderRadius:'12px',padding:'16px',transition:'all 0.2s'}}>
+                    <span className="material-icons-round" style={{fontSize:'18px',color: s.s==='good'?'#10b981':s.s==='warn'?'#f59e0b':'#94a3b8',marginBottom:'10px',display:'block'}}>{s.icon}</span>
+                    <div style={{fontSize:'24px',fontWeight:'700',color:'#0f172a',letterSpacing:'-0.5px'}}>{s.n}</div>
+                    <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'2px'}}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* HOSTELS LIST */}
+            {tab==='hostels' && !roomView && (
+              <div style={{background:'white',border:'1px solid #f1f5f9',borderRadius:'12px',overflow:'hidden'}}>
+                <div style={{padding:'16px 20px',borderBottom:'1px solid #f1f5f9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>Properties</div>
+                  <div style={{fontSize:'12px',color:'#94a3b8'}}>{hostels.length} total</div>
+                </div>
+                {hostels.length === 0 ? (
+                  <div style={{padding:'48px',textAlign:'center',color:'#94a3b8'}}>
+                    <span className="material-icons-round" style={{fontSize:'40px',color:'#cbd5e1',display:'block',marginBottom:'12px'}}>apartment</span>
+                    <div style={{fontWeight:'500',color:'#475569',marginBottom:'4px'}}>No properties yet</div>
+                    <div style={{fontSize:'13px',marginBottom:'16px'}}>Add your first hostel to start receiving bookings</div>
+                    <button onClick={() => { setHForm(emptyHostel); setModal({ type:'hostel' }); }} style={{background:'#0f172a',color:'white',border:'none',padding:'9px 20px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>Add Property</button>
+                  </div>
+                ) : hostels.map(h => {
+                  const avail = h.rooms?.filter(r => !r.is_full).length || 0;
+                  return (
+                    <div key={h.id} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 20px',borderBottom:'1px solid #f9fafb',transition:'background 0.15s'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:'12px',flex:1}}>
+                        <div style={{width:'38px',height:'38px',background:'#f1f5f9',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                          <span className="material-icons-round" style={{fontSize:'20px',color:'#64748b'}}>apartment</span>
+                        </div>
+                        <div>
+                          <div style={{fontSize:'13px',fontWeight:'600',color:'#0f172a'}}>{h.name}</div>
+                          <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'2px',display:'flex',gap:'8px',flexWrap:'wrap'}}>
+                            <span>{h.city}</span>
+                            {h.universities?.name && <span>· {h.universities.name}</span>}
+                            <span>· {h.rooms?.length||0} rooms</span>
+                            {(h.rooms?.length||0) > 0 && <span style={{color: avail===0?'#ef4444':'#10b981'}}>· {avail} available</span>}
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                        <Badge s={h.status}/>
+                        <div style={{display:'flex',gap:'4px'}}>
+                          {h.status==='approved' && (
+                            <Btn color="blue" onClick={() => setRoomView(h.id)}>
+                              <span className="material-icons-round" style={{fontSize:'13px'}}>bed</span>
+                              Rooms
+                            </Btn>
+                          )}
+                          <Btn color="gray" onClick={() => { setHForm({ name:h.name,city:h.city,address:h.address,description:h.description||'',university_id:h.university_id||'',distance_from_university:h.distance_from_university||'',amenities:h.amenities||[],transport_notes:h.transport_notes||'',latitude:h.latitude||'',longitude:h.longitude||'' }); setModal({ type:'hostel', hostelId:h.id }); }}>
+                            <span className="material-icons-round" style={{fontSize:'13px'}}>edit</span>
+                          </Btn>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ROOMS VIEW */}
+            {tab==='hostels' && roomView && selectedHostel && (
+              <div>
+                <div style={{background:'white',border:'1px solid #f1f5f9',borderRadius:'12px',padding:'14px 18px',marginBottom:'16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div>
+                    <div style={{fontWeight:'600',color:'#0f172a'}}>{selectedHostel.name}</div>
+                    <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'2px'}}>{selectedHostel.address} · {selectedHostel.city}</div>
+                  </div>
+                  <div style={{display:'flex',gap:'16px',fontSize:'13px'}}>
+                    <div><strong>{selectedHostel.rooms?.length||0}</strong> <span style={{color:'#94a3b8'}}>rooms total</span></div>
+                    <div><strong style={{color:'#10b981'}}>{selectedHostel.rooms?.filter(r=>!r.is_full).length||0}</strong> <span style={{color:'#94a3b8'}}>available</span></div>
+                  </div>
+                </div>
+
+                {!selectedHostel.rooms?.length ? (
+                  <div style={{background:'white',border:'1px solid #f1f5f9',borderRadius:'12px',padding:'48px',textAlign:'center',color:'#94a3b8'}}>
+                    <span className="material-icons-round" style={{fontSize:'40px',color:'#cbd5e1',display:'block',marginBottom:'12px'}}>bed</span>
+                    <div style={{fontWeight:'500',color:'#475569',marginBottom:'4px'}}>No rooms added yet</div>
+                    <div style={{fontSize:'13px',marginBottom:'16px'}}>Add rooms one by one with labels like A101, B205</div>
+                    <button onClick={() => { setRForm(emptyRoom); setModal({ type:'room', forHostel: roomView }); }} style={{background:'#0f172a',color:'white',border:'none',padding:'9px 20px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>Add First Room</button>
+                  </div>
+                ) : (
+                  <div className="rooms-grid">
+                    {selectedHostel.rooms.map(room => (
+                      <div key={room.id} style={{background: room.is_full ? '#f8fafc' : 'white',border:'1px solid #f1f5f9',borderRadius:'12px',padding:'14px',transition:'all 0.2s',opacity: room.is_full ? 0.7 : 1}}>
+                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'8px'}}>
+                          <span style={{background:'#0f172a',color:'white',padding:'3px 9px',borderRadius:'5px',fontSize:'12px',fontWeight:'700',fontFamily:'monospace',letterSpacing:'0.3px'}}>{room.room_label||'—'}</span>
+                          <span style={{fontSize:'11px',fontWeight:'600',padding:'2px 8px',borderRadius:'20px',background: room.is_full?'#fee2e2':'#d1fae5',color: room.is_full?'#991b1b':'#065f46'}}>
+                            {room.is_full ? 'Full' : `${room.available_count} left`}
+                          </span>
+                        </div>
+                        <div style={{fontSize:'13px',fontWeight:'600',color:'#0f172a',marginBottom:'2px'}}>{room.room_type}</div>
+                        {room.floor && <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'8px'}}>Floor {room.floor}</div>}
+                        <div style={{display:'flex',flexDirection:'column',gap:'4px',marginBottom:'8px'}}>
+                          <div style={{display:'flex',alignItems:'center',gap:'5px',fontSize:'12px',color:'#475569'}}>
+                            <span className="material-icons-round" style={{fontSize:'13px',color:'#94a3b8'}}>people</span>
+                            {room.capacity} person{room.capacity>1?'s':''}
+                          </div>
+                          <div style={{fontSize:'13px',fontWeight:'700',color:'#1d4ed8'}}>
+                            TZS {parseFloat(room.price_per_semester||0).toLocaleString()}/sem
+                          </div>
+                          <div style={{fontSize:'11px',color:'#94a3b8'}}>
+                            Deposit: TZS {(parseFloat(room.price_per_semester||0)*0.5).toLocaleString()}
+                          </div>
+                        </div>
+                        {room.description && <div style={{fontSize:'12px',color:'#94a3b8',marginBottom:'8px',lineHeight:'1.5',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{room.description}</div>}
+                        <div style={{display:'flex',gap:'6px',marginTop:'4px'}}>
+                          <Btn color="gray" style={{flex:1,justifyContent:'center'}} onClick={() => { setRForm({ ...room }); setModal({ type:'room', roomId: room.id }); }}>
+                            <span className="material-icons-round" style={{fontSize:'13px'}}>edit</span>
+                            Edit
+                          </Btn>
+                          <Btn color="red" onClick={() => removeRoom(room.id)}>
+                            <span className="material-icons-round" style={{fontSize:'13px'}}>delete</span>
+                          </Btn>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Add tile */}
+                    <div onClick={() => { setRForm(emptyRoom); setModal({ type:'room', forHostel: roomView }); }}
+                      style={{background:'white',border:'1.5px dashed #e2e8f0',borderRadius:'12px',padding:'14px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer',minHeight:'120px',transition:'all 0.2s'}}>
+                      <span className="material-icons-round" style={{fontSize:'28px',color:'#cbd5e1',marginBottom:'8px'}}>add_circle_outline</span>
+                      <div style={{fontSize:'13px',color:'#94a3b8',fontWeight:'500'}}>Add Room</div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* BOOKINGS */}
-            {activeTab==='bookings' && (
-              <div className="table-wrap">
-                <table className="table">
-                  <thead><tr><th>Student</th><th>Property</th><th>Room</th><th>Semester</th><th>Deposit</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody>
-                    {bookings.length===0 ? <tr><td colSpan="7" className="empty-cell">No booking requests yet</td></tr>
-                    : bookings.map(b => {
-                      const ss = statusStyle(b.status);
-                      return (
-                        <tr key={b.id}>
-                          <td style={{fontWeight:600,color:'#0f172a'}}>{b.users?.first_name} {b.users?.last_name}</td>
-                          <td>{b.hostels?.name}</td>
-                          <td>{b.rooms?.room_type}</td>
-                          <td>{b.semester}</td>
-                          <td style={{fontWeight:700,color:'#2563eb'}}>TZS {parseFloat(b.deposit_amount||0).toLocaleString()}</td>
-                          <td><span className="badge" style={{background:ss.bg,color:ss.color}}>{b.status}</span></td>
-                          <td>
-                            {b.status==='pending' ? (
-                              <div className="action-btns">
-                                <button className="btn-sm btn-confirm" onClick={() => handleBooking(b.id,'confirmed')}>✓ Confirm</button>
-                                <button className="btn-sm btn-cancel" onClick={() => handleBooking(b.id,'cancelled')}>✗ Cancel</button>
-                              </div>
-                            ) : <span style={{color:'#94a3b8',fontSize:'12px'}}>—</span>}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+            {tab==='bookings' && (
+              <div style={{background:'white',border:'1px solid #f1f5f9',borderRadius:'12px',overflow:'hidden'}}>
+                <div style={{padding:'16px 20px',borderBottom:'1px solid #f1f5f9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>Bookings</div>
+                  <div style={{fontSize:'12px',color:'#94a3b8'}}>{pendingB.length} pending review</div>
+                </div>
+                {bookings.length === 0 ? (
+                  <div style={{padding:'48px',textAlign:'center',color:'#94a3b8',fontSize:'13px'}}>No bookings yet</div>
+                ) : (
+                  <>
+                    <div className="tbl-wrap" style={{overflowX:'auto'}}>
+                      <table className="tbl">
+                        <thead><tr><th>Student</th><th>Property</th><th>Room</th><th>Semester</th><th>Deposit</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead>
+                        <tbody>
+                          {bookings.map(b => (
+                            <tr key={b.id} className={b.status==='pending'?'hl':''}>
+                              <td><div style={{fontSize:'13px',fontWeight:'500',color:'#0f172a'}}>{b.users?.first_name} {b.users?.last_name}</div><div style={{fontSize:'12px',color:'#94a3b8'}}>{b.users?.phone}</div></td>
+                              <td style={{fontSize:'13px',fontWeight:'500',color:'#0f172a'}}>{b.hostels?.name}</td>
+                              <td><div style={{fontSize:'13px',fontWeight:'500',color:'#0f172a'}}>{b.rooms?.room_label}</div><div style={{fontSize:'12px',color:'#94a3b8'}}>{b.rooms?.room_type}</div></td>
+                              <td style={{fontSize:'12px',color:'#94a3b8'}}>{b.semester}</td>
+                              <td style={{color:'#1d4ed8',fontWeight:'600',fontSize:'13px'}}>TZS {parseFloat(b.deposit_amount||0).toLocaleString()}</td>
+                              <td><Badge s={b.status}/></td>
+                              <td><Badge s={b.payment_status||'unpaid'}/></td>
+                              <td>
+                                <div style={{display:'flex',gap:'4px'}}>
+                                  {b.status==='pending' && <>
+                                    <Btn color="green" onClick={() => doBooking(b.id,'confirm')} disabled={actionLoading}>Confirm</Btn>
+                                    <Btn color="red" onClick={() => doBooking(b.id,'reject')} disabled={actionLoading}>Reject</Btn>
+                                  </>}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="m-cards" style={{display:'none'}}>
+                      {bookings.map(b => (
+                        <div key={b.id} style={{padding:'16px',borderBottom:'1px solid #f1f5f9',background:b.status==='pending'?'#fffbeb':'white'}}>
+                          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:'8px'}}>
+                            <div>
+                              <div style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>{b.users?.first_name} {b.users?.last_name}</div>
+                              <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'2px'}}>{b.hostels?.name} · {b.rooms?.room_label} · {b.semester}</div>
+                            </div>
+                            <Badge s={b.status}/>
+                          </div>
+                          <div style={{fontSize:'14px',fontWeight:'600',color:'#1d4ed8',marginBottom:'10px'}}>Deposit: TZS {parseFloat(b.deposit_amount||0).toLocaleString()}</div>
+                          {b.status==='pending' && (
+                            <div style={{display:'flex',gap:'6px'}}>
+                              <Btn color="green" style={{flex:1,justifyContent:'center'}} onClick={() => doBooking(b.id,'confirm')}>Confirm</Btn>
+                              <Btn color="red" style={{flex:1,justifyContent:'center'}} onClick={() => doBooking(b.id,'reject')}>Reject</Btn>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
-            {/* PAYMENTS */}
-            {activeTab==='payments' && (
-              <div className="table-wrap">
-                <table className="table">
-                  <thead><tr><th>Student</th><th>Property</th><th>Room</th><th>Semester</th><th>Deposit</th><th>Method</th><th>Transaction ID</th><th>Action</th></tr></thead>
-                  <tbody>
-                    {pendingPayments.length===0 ? <tr><td colSpan="8" className="empty-cell">No pending payments — all clear! ✓</td></tr>
-                    : pendingPayments.map(b => (
-                      <tr key={b.id} className="payment-row">
-                        <td style={{fontWeight:600,color:'#0f172a'}}>{b.users?.first_name} {b.users?.last_name}</td>
-                        <td>{b.hostels?.name}</td>
-                        <td>{b.rooms?.room_type}</td>
-                        <td>{b.semester}</td>
-                        <td style={{fontWeight:700,color:'#2563eb'}}>TZS {parseFloat(b.deposit_amount||0).toLocaleString()}</td>
-                        <td style={{textTransform:'capitalize'}}>{b.payment_method}</td>
-                        <td><span className="txid">{b.transaction_id}</span></td>
-                        <td>
-                          <div className="action-btns">
-                            <button className="btn-sm btn-confirm" onClick={() => handlePayment(b.id,'confirm')}>✓ Confirm</button>
-                            <button className="btn-sm btn-cancel" onClick={() => handlePayment(b.id,'reject')}>✗ Reject</button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {/* ACCOUNT */}
+            {tab==='account' && (
+              <div style={{background:'white',border:'1px solid #f1f5f9',borderRadius:'12px',overflow:'hidden'}}>
+                <div style={{padding:'16px 20px',borderBottom:'1px solid #f1f5f9'}}><div style={{fontSize:'14px',fontWeight:'600',color:'#0f172a'}}>Account Settings</div></div>
+                <div style={{padding:'20px'}}>
+                  <div style={{marginBottom:'24px',paddingBottom:'24px',borderBottom:'1px solid #f1f5f9'}}>
+                    <div style={{fontSize:'12px',fontWeight:'600',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.5px',marginBottom:'14px'}}>Profile</div>
+                    <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+                      <div style={{width:'44px',height:'44px',background:'linear-gradient(135deg,#d1fae5,#a7f3d0)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px',fontWeight:'700',color:'#065f46'}}>{user?.first_name?.[0]}{user?.last_name?.[0]}</div>
+                      <div>
+                        <div style={{fontWeight:'600',color:'#0f172a'}}>{user?.first_name} {user?.last_name}</div>
+                        <div style={{fontSize:'13px',color:'#94a3b8'}}>{user?.email}</div>
+                        <div style={{fontSize:'12px',color:'#94a3b8'}}>{user?.phone||'No phone'}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{background:'#fff5f5',border:'1px solid #fee2e2',borderRadius:'10px',padding:'16px'}}>
+                    <div style={{fontSize:'12px',fontWeight:'600',color:'#ef4444',textTransform:'uppercase',letterSpacing:'0.5px',marginBottom:'10px'}}>Danger Zone</div>
+                    <p style={{fontSize:'13px',color:'#64748b',marginBottom:'14px',lineHeight:'1.6'}}>Permanently delete your host account and all properties. This cannot be undone.</p>
+                    <button onClick={() => setModal({ type:'delete' })} style={{display:'inline-flex',alignItems:'center',gap:'6px',background:'white',border:'1.5px solid #ef4444',color:'#ef4444',padding:'8px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+                      <span className="material-icons-round" style={{fontSize:'15px'}}>delete_forever</span>
+                      Delete My Account
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         </main>
       </div>
 
-      {/* ADD HOSTEL MODAL */}
-      {showHostelModal && (
-        <div className="modal-overlay" onClick={() => setShowHostelModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowHostelModal(false)}>
-              <span className="material-icons-round" style={{fontSize:'18px'}}>close</span>
-            </button>
-            <div className="modal-title">Add New Property</div>
-            <div className="modal-sub">Admin will review before it goes live</div>
-            <form onSubmit={submitHostel}>
-              <div className="sec-label">Basic Information</div>
-              <div className="form-group">
-                <label className="form-label">Property Name *</label>
-                <input className="form-input" placeholder="e.g. Sunrise Hostel" value={hostelForm.name} onChange={e => setHostelForm({...hostelForm,name:e.target.value})} required/>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">City *</label>
-                  <input className="form-input" placeholder="Dar es Salaam" value={hostelForm.city} onChange={e => setHostelForm({...hostelForm,city:e.target.value})} required/>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Distance (km)</label>
-                  <input className="form-input" type="number" step="0.1" placeholder="0.5" value={hostelForm.distance_from_university} onChange={e => setHostelForm({...hostelForm,distance_from_university:e.target.value})}/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Full Address *</label>
-                <input className="form-input" placeholder="Street, Area" value={hostelForm.address} onChange={e => setHostelForm({...hostelForm,address:e.target.value})} required/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Description</label>
-                <textarea className="form-textarea" placeholder="Describe your property..." value={hostelForm.description} onChange={e => setHostelForm({...hostelForm,description:e.target.value})}/>
-              </div>
-
-              <div className="sec-label">Nearby Universities</div>
-              <div className="unis-grid">
-                {universities.map(u => (
-                  <div key={u.id} className={`uni-chip ${selectedUnis.includes(u.id)?'selected':''}`} onClick={() => toggleUni(u.id)}>
-                    <div className="uni-check">
-                      {selectedUnis.includes(u.id) && <span className="material-icons-round" style={{fontSize:'12px',color:'white'}}>check</span>}
-                    </div>
-                    {u.short_name || u.name}
-                  </div>
-                ))}
-              </div>
-
-              <div className="sec-label">Amenities</div>
-              <div className="amenities-grid">
-                {Object.entries(AMENITY_ICONS).map(([name, icon]) => (
-                  <div key={name} className={`amenity-chip ${selectedAmenities.includes(name)?'selected':''}`} onClick={() => toggleAmenity(name)}>
-                    <span className="material-icons-round" style={{fontSize:'20px',color:selectedAmenities.includes(name)?'#2563eb':'#94a3b8'}}>{icon}</span>
-                    <span className="amenity-chip-label">{name}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="modal-footer">
-                <button type="button" className="btn-cancel-modal" onClick={() => setShowHostelModal(false)}>Cancel</button>
-                <button type="submit" className="btn-submit-modal" disabled={formLoading}>{formLoading?'Submitting...':'Submit Property'}</button>
-              </div>
-            </form>
+      {/* HOSTEL MODAL */}
+      {modal?.type === 'hostel' && (
+        <Modal title={modal.hostelId ? 'Edit Property' : 'Add New Property'} big onClose={() => setModal(null)}>
+          <div className="form-g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            <Input label="Property Name *" placeholder="e.g. Sunrise Hostel" value={hForm.name} onChange={e => setHForm(f=>({...f,name:e.target.value}))}/>
+            <Input label="City *" placeholder="e.g. Dar es Salaam" value={hForm.city} onChange={e => setHForm(f=>({...f,city:e.target.value}))}/>
           </div>
-        </div>
+          <Input label="Full Address *" placeholder="Street address, area, city" value={hForm.address} onChange={e => setHForm(f=>({...f,address:e.target.value}))}/>
+          <div className="form-g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            <Input label="Latitude (GPS)" placeholder="-6.7924" value={hForm.latitude} onChange={e => setHForm(f=>({...f,latitude:e.target.value}))}/>
+            <Input label="Longitude (GPS)" placeholder="39.2083" value={hForm.longitude} onChange={e => setHForm(f=>({...f,longitude:e.target.value}))}/>
+          </div>
+          <div className="form-g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            <Input label="Distance from University (km)" type="number" placeholder="0.5" value={hForm.distance_from_university} onChange={e => setHForm(f=>({...f,distance_from_university:e.target.value}))}/>
+            <Input label="Transport Notes" placeholder="Bus 34, stops 200m away, TZS 300" value={hForm.transport_notes} onChange={e => setHForm(f=>({...f,transport_notes:e.target.value}))}/>
+          </div>
+          <Textarea label="Description" placeholder="Describe your hostel..." value={hForm.description} onChange={e => setHForm(f=>({...f,description:e.target.value}))}/>
+          <div style={{marginBottom:'14px'}}>
+            <label style={{display:'block',fontSize:'12px',fontWeight:'600',color:'#374151',marginBottom:'8px'}}>Amenities</label>
+            <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+              {AMENITIES.map(a => (
+                <button key={a} type="button"
+                  onClick={() => setHForm(f => ({ ...f, amenities: f.amenities.includes(a) ? f.amenities.filter(x=>x!==a) : [...f.amenities,a] }))}
+                  style={{border:`1.5px solid ${hForm.amenities.includes(a)?'#2563eb':'#e2e8f0'}`,background: hForm.amenities.includes(a)?'#eff6ff':'#f9fafb',borderRadius:'7px',padding:'5px 12px',fontSize:'12px',fontWeight: hForm.amenities.includes(a)?'600':'500',color: hForm.amenities.includes(a)?'#1d4ed8':'#64748b',cursor:'pointer',fontFamily:'Inter,sans-serif',transition:'all 0.15s',display:'flex',alignItems:'center',gap:'4px'}}>
+                  {hForm.amenities.includes(a) && <span className="material-icons-round" style={{fontSize:'12px'}}>check</span>}
+                  {a}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{display:'flex',gap:'8px',justifyContent:'flex-end',marginTop:'8px'}}>
+            <button onClick={() => setModal(null)} style={{background:'#f1f5f9',color:'#475569',border:'none',padding:'9px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'500',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>Cancel</button>
+            <button disabled={actionLoading} onClick={saveHostel} style={{background:'#0f172a',color:'white',border:'none',padding:'9px 20px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif',opacity:actionLoading?0.5:1}}>
+              {actionLoading ? 'Saving...' : modal.hostelId ? 'Save Changes' : 'Submit for Review'}
+            </button>
+          </div>
+        </Modal>
       )}
 
-      {/* ADD ROOM MODAL */}
-      {showRoomModal && selectedHostel && (
-        <div className="modal-overlay" onClick={() => setShowRoomModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowRoomModal(false)}>
-              <span className="material-icons-round" style={{fontSize:'18px'}}>close</span>
-            </button>
-            <div className="modal-title">Add Room</div>
-            <div className="modal-sub">Adding room to {selectedHostel.name}</div>
-            <form onSubmit={submitRoom}>
-              <div className="sec-label">Room Type</div>
-              <div className="room-types-grid">
-                {ROOM_TYPES.map(rt => (
-                  <div key={rt.value} className={`room-type-card ${roomForm.room_type===rt.value?'selected':''}`}
-                    onClick={() => setRoomForm({...roomForm,room_type:rt.value,capacity:rt.value.includes('2')?'2':rt.value.includes('3')?'3':rt.value.includes('4')?'4':'1'})}>
-                    <span className="material-icons-round" style={{fontSize:'26px',color:roomForm.room_type===rt.value?'#2563eb':'#94a3b8'}}>{rt.icon}</span>
-                    <span className="room-type-label">{rt.value}</span>
-                    <span className="room-type-desc">{rt.desc}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="sec-label">Room Details</div>
-              <div className="form-row-3">
-                <div className="form-group">
-                  <label className="form-label">Price/Semester (TZS)</label>
-                  <input className="form-input" type="number" placeholder="400000" value={roomForm.price_per_semester} onChange={e => setRoomForm({...roomForm,price_per_semester:e.target.value})} required/>
-                  <div className="form-hint">Per person per semester</div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Persons/Room</label>
-                  <input className="form-input" type="number" min="1" placeholder="1" value={roomForm.capacity} onChange={e => setRoomForm({...roomForm,capacity:e.target.value})} required/>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">No. of Rooms</label>
-                  <input className="form-input" type="number" min="1" placeholder="5" value={roomForm.available_count} onChange={e => setRoomForm({...roomForm,available_count:e.target.value})} required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Description (optional)</label>
-                <textarea className="form-textarea" placeholder="Describe this room type..." value={roomForm.description} onChange={e => setRoomForm({...roomForm,description:e.target.value})}/>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn-cancel-modal" onClick={() => setShowRoomModal(false)}>Cancel</button>
-                <button type="submit" className="btn-submit-modal" disabled={formLoading||!roomForm.room_type}>{formLoading?'Adding...':'Add Room'}</button>
-              </div>
-            </form>
+      {/* ROOM MODAL */}
+      {modal?.type === 'room' && (
+        <Modal title={modal.roomId ? 'Edit Room' : 'Add Room'} big onClose={() => setModal(null)}>
+          <div className="form-g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            <Input label="Room Label *" hint="e.g. A101, B205" placeholder="A101" value={rForm.room_label} onChange={e => setRForm(f=>({...f,room_label:e.target.value.toUpperCase()}))}/>
+            <Input label="Floor" placeholder="Ground, 1st, 2nd..." value={rForm.floor} onChange={e => setRForm(f=>({...f,floor:e.target.value}))}/>
           </div>
-        </div>
+          <div style={{marginBottom:'14px'}}>
+            <label style={{display:'block',fontSize:'12px',fontWeight:'600',color:'#374151',marginBottom:'8px'}}>Room Type *</label>
+            <div className="form-g3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'6px'}}>
+              {ROOM_TYPES.map(t => (
+                <button key={t} type="button"
+                  onClick={() => setRForm(f => ({ ...f, room_type:t, capacity: ROOM_CAPS[t]||1 }))}
+                  style={{border:`1.5px solid ${rForm.room_type===t?'#2563eb':'#e2e8f0'}`,background: rForm.room_type===t?'#eff6ff':'#f9fafb',borderRadius:'8px',padding:'8px 6px',fontSize:'12px',fontWeight: rForm.room_type===t?'600':'500',color: rForm.room_type===t?'#1d4ed8':'#64748b',cursor:'pointer',fontFamily:'Inter,sans-serif',transition:'all 0.15s',textAlign:'center'}}>
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="form-g3" style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'12px'}}>
+            <Input label="Capacity (persons)" type="number" min="1" max="20" value={rForm.capacity} onChange={e => setRForm(f=>({...f,capacity:parseInt(e.target.value)||1}))}/>
+            <Input label="Price / Semester (TZS) *" type="number" placeholder="400000" value={rForm.price_per_semester} onChange={e => setRForm(f=>({...f,price_per_semester:e.target.value}))}/>
+            <Input label="Number of Rooms" type="number" min="0" value={rForm.available_count} onChange={e => setRForm(f=>({...f,available_count:parseInt(e.target.value)||0}))}/>
+          </div>
+          {parseFloat(rForm.price_per_semester) > 0 && (
+            <div style={{background:'#eff6ff',border:'1px solid #bfdbfe',borderRadius:'8px',padding:'8px 12px',fontSize:'12px',color:'#1d4ed8',marginBottom:'12px',display:'flex',alignItems:'center',gap:'6px'}}>
+              <span className="material-icons-round" style={{fontSize:'14px'}}>info</span>
+              50% deposit = <strong>TZS {(parseFloat(rForm.price_per_semester)*0.5).toLocaleString()}</strong> · per person, per semester
+            </div>
+          )}
+          <div style={{marginBottom:'14px'}}>
+            <label style={{display:'flex',alignItems:'center',gap:'8px',cursor:'pointer',fontSize:'13px',color:'#475569'}}>
+              <input type="checkbox" checked={rForm.available_count===0||rForm.is_full}
+                onChange={e => setRForm(f=>({...f,is_full:e.target.checked,available_count:e.target.checked?0:f.available_count||1}))}/>
+              Mark this room as full (no more bookings)
+            </label>
+          </div>
+          <Textarea label="Description" placeholder="Additional details about this specific room..." value={rForm.description} onChange={e => setRForm(f=>({...f,description:e.target.value}))}/>
+          <div style={{display:'flex',gap:'8px',justifyContent:'flex-end',marginTop:'8px'}}>
+            <button onClick={() => setModal(null)} style={{background:'#f1f5f9',color:'#475569',border:'none',padding:'9px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'500',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>Cancel</button>
+            <button disabled={actionLoading} onClick={saveRoom} style={{background:'#0f172a',color:'white',border:'none',padding:'9px 20px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif',opacity:actionLoading?0.5:1}}>
+              {actionLoading ? 'Saving...' : modal.roomId ? 'Save Changes' : 'Add Room'}
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* DELETE ACCOUNT MODAL */}
+      {modal?.type === 'delete' && (
+        <Modal title="Delete Account" onClose={() => setModal(null)}>
+          <div style={{textAlign:'center',padding:'8px 0 16px'}}>
+            <span className="material-icons-round" style={{fontSize:'40px',color:'#ef4444',display:'block',marginBottom:'12px'}}>delete_forever</span>
+            <p style={{fontSize:'14px',color:'#475569',lineHeight:'1.7',marginBottom:'16px'}}>This will permanently delete your account, all properties, and cancel all pending bookings.</p>
+          </div>
+          <input type="password" placeholder="Your password" value={deletePw} onChange={e => setDeletePw(e.target.value)}
+            style={{width:'100%',border:'1.5px solid #e2e8f0',borderRadius:'8px',padding:'10px 12px',fontSize:'14px',fontFamily:'Inter,sans-serif',outline:'none',background:'#f9fafb',marginBottom:'4px'}}/>
+          <div style={{display:'flex',gap:'8px',justifyContent:'flex-end',marginTop:'14px'}}>
+            <button onClick={() => setModal(null)} style={{background:'#f1f5f9',color:'#475569',border:'none',padding:'9px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'500',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>Cancel</button>
+            <button disabled={actionLoading||!deletePw} onClick={doDeleteAccount} style={{background:'#ef4444',color:'white',border:'none',padding:'9px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'Inter,sans-serif',opacity:(actionLoading||!deletePw)?0.5:1}}>
+              {actionLoading ? 'Deleting...' : 'Delete Forever'}
+            </button>
+          </div>
+        </Modal>
       )}
     </>
   );

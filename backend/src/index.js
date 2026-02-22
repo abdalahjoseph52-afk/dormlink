@@ -9,6 +9,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const hostelRoutes = require('./routes/hostelRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const hostRoutes    = require('./routes/hostRoutes');
 
 const app = express();
 
@@ -24,9 +26,12 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/student', studentRoutes);
+app.use('/api/host',    hostRoutes);
 app.use('/api/hostels', hostelRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+
 
 // Test routes
 app.get('/', (req, res) => {
