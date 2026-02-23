@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
-import { useRouter } from 'next/navigation';
 
 const TANZANIA_UNIVERSITIES = [
   { name: 'University of Dar es Salaam', short: 'UDSM', location: 'Dar es Salaam' },
@@ -52,569 +51,435 @@ const TANZANIA_UNIVERSITIES = [
   { name: 'Mbeya University of Science & Technology', short: 'MUST', location: 'Mbeya' },
 ];
 
+const CITY_ICON = {
+  'Dar es Salaam':'location_city',
+  'Dodoma':'account_balance',
+  'Arusha':'landscape',
+  'Mwanza':'water',
+  'Morogoro':'park',
+  'Moshi':'terrain',
+  'Mbeya':'terrain',
+  'Iringa':'landscape',
+  'Zanzibar':'beach_access',
+  'Bagamoyo':'anchor',
+  'Lushoto':'forest',
+  'Geita':'diamond',
+};
+
 export default function HomePage() {
   const { user, logout } = useAuth();
-  const router = useRouter();
   const [hostels, setHostels] = useState([]);
-  const [universities, setUniversities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedUniversity, setSelectedUniversity] = useState(null);
-  const [filteredHostels, setFilteredHostels] = useState([]);
+  const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDrop, setShowDrop] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [filtered, setFiltered] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
-    fetchData();
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    api.get('/hostels/approved').then(r => {
+      const data = r.data.hostels || [];
+      setHostels(data); setFiltered(data);
+    }).catch(console.error).finally(() => setLoading(false));
+
+    const close = e => { if (searchRef.current && !searchRef.current.contains(e.target)) setShowDrop(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
   }, []);
 
-  const handleClickOutside = (e) => {
-    if (searchRef.current && !searchRef.current.contains(e.target)) {
-      setShowDropdown(false);
+  const onType = (q) => {
+    setQuery(q);
+    if (!q.trim()) { setSuggestions([]); setShowDrop(false); return; }
+    const q2 = q.toLowerCase();
+    const unis = TANZANIA_UNIVERSITIES
+      .filter(u => u.name.toLowerCase().includes(q2) || u.short.toLowerCase().includes(q2) || u.location.toLowerCase().includes(q2))
+      .map(u => ({ type:'uni', label:u.name, sub:u.location, short:u.short, loc:u.location }));
+    setSuggestions(unis.slice(0, 9));
+    setShowDrop(unis.length > 0);
+  };
+
+  const pick = (s) => {
+    setQuery(s.label); setShowDrop(false); setActiveFilter(s);
+    if (s.type === 'city') {
+      setFiltered(hostels.filter(h => h.city?.toLowerCase() === s.label.toLowerCase()));
+    } else {
+      const byCity = hostels.filter(h => h.city?.toLowerCase().includes(s.loc.toLowerCase()));
+      const byUni = hostels.filter(h => h.universities?.name?.toLowerCase().includes(s.label.toLowerCase()));
+      const merged = [...new Map([...byCity,...byUni].map(h=>[h.id,h])).values()];
+      setFiltered(merged.length > 0 ? merged : byCity);
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const [hostelsRes, unisRes] = await Promise.all([
-        api.get('/hostels/approved'),
-        api.get('/hostels/universities'),
-      ]);
-      setHostels(hostelsRes.data.hostels || []);
-      setFilteredHostels(hostelsRes.data.hostels || []);
-      setUniversities(unisRes.data.universities || []);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+  const clear = () => { setQuery(''); setActiveFilter(null); setFiltered(hostels); setShowDrop(false); };
+
+  const grouped = filtered.reduce((acc, h) => {
+    const c = h.city || 'Other';
+    if (!acc[c]) acc[c] = [];
+    acc[c].push(h); return acc;
+  }, {});
+
+  const price = (h) => {
+    const p = h.rooms?.[0]?.price_per_semester || (h.rooms?.[0]?.price_per_month && h.rooms[0].price_per_month * 4);
+    return p ? `TZS ${parseFloat(p).toLocaleString()}` : null;
   };
 
-  const handleSearch = (q) => {
-    setSearchQuery(q);
-    if (!q.trim()) { setSearchResults([]); setShowDropdown(false); return; }
-    const results = TANZANIA_UNIVERSITIES.filter(u =>
-      u.name.toLowerCase().includes(q.toLowerCase()) ||
-      u.short.toLowerCase().includes(q.toLowerCase()) ||
-      u.location.toLowerCase().includes(q.toLowerCase())
-    );
-    setSearchResults(results);
-    setShowDropdown(true);
+  const timeAgo = (d) => {
+    if (!d) return '';
+    const days = Math.floor((Date.now()-new Date(d))/86400000);
+    if (days===0) return 'New today'; if (days<7) return `${days}d ago`;
+    if (days<30) return `${Math.floor(days/7)}w ago`; return '';
   };
 
-  const selectUniversity = (uni) => {
-    setSelectedUniversity(uni);
-    setSearchQuery(uni.name);
-    setShowDropdown(false);
-    const filtered = hostels.filter(h =>
-      h.universities?.name?.toLowerCase().includes(uni.short.toLowerCase()) ||
-      h.universities?.name?.toLowerCase().includes(uni.name.toLowerCase()) ||
-      h.university_name?.toLowerCase().includes(uni.name.toLowerCase()) ||
-      h.city?.toLowerCase().includes(uni.location.toLowerCase())
-    );
-    setFilteredHostels(filtered.length > 0 ? filtered : hostels);
-  };
-
-  const clearSearch = () => {
-    setSearchQuery('');
-    setSelectedUniversity(null);
-    setFilteredHostels(hostels);
-    setShowDropdown(false);
-  };
-
-  const groupedByLocation = () => {
-    const groups = {};
-    filteredHostels.forEach(h => {
-      const loc = h.city || 'Other';
-      if (!groups[loc]) groups[loc] = [];
-      groups[loc].push(h);
-    });
-    return groups;
-  };
-
-  const getTimeAgo = (dateStr) => {
-    if (!dateStr) return '';
-    const diff = Date.now() - new Date(dateStr);
-    const days = Math.floor(diff / 86400000);
-    if (days === 0) return 'Added today';
-    if (days === 1) return 'Added yesterday';
-    if (days < 7) return `Added ${days} days ago`;
-    if (days < 30) return `Added ${Math.floor(days / 7)} weeks ago`;
-    return `Added ${Math.floor(days / 30)} months ago`;
-  };
+  const SearchDropdown = ({ style={} }) => showDrop && suggestions.length > 0 ? (
+    <div style={{position:'absolute',top:'calc(100% + 8px)',left:0,right:0,background:'white',borderRadius:'16px',boxShadow:'0 8px 40px rgba(0,0,0,0.16)',zIndex:500,overflow:'hidden',...style}}>
+      <div style={{padding:'12px 16px 4px',fontSize:'11px',fontWeight:700,color:'#717171',textTransform:'uppercase',letterSpacing:'0.5px'}}>Universities — 44+ in Tanzania</div>
+      {suggestions.map((s,i) => (
+        <div key={i} onClick={()=>pick(s)} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 16px',cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.background='#f7f7f7'} onMouseLeave={e=>e.currentTarget.style.background='white'}>
+          <div style={{width:36,height:36,background:'#F4F7FC',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <span className="material-icons-round" style={{fontSize:18,color:'#10367D'}}>school</span>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:14,fontWeight:600,color:'#222'}}>{s.label}</div>
+            <div style={{fontSize:12,color:'#717171'}}>{s.sub}</div>
+          </div>
+          <span style={{background:'#F4F7FC',color:'#10367D',fontSize:11,fontWeight:700,padding:'2px 8px',borderRadius:20,flexShrink:0}}>{s.short}</span>
+        </div>
+      ))}
+    </div>
+  ) : null;
 
   return (
     <>
-      <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
       <style>{`
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        :root{
-          --blue:#2563eb;--blue-light:#eff6ff;--blue-mid:#bfdbfe;
-          --navy:#0f172a;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
-          --white:#ffffff;--bg:#f8fafc;--radius:16px;
-        }
         html{scroll-behavior:smooth;}
-        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        body{font-family:'Outfit',sans-serif;font-weight:400;background:#fff;color:#0D1830;min-height:100vh;}
+
+        .nav{position:sticky;top:0;z-index:200;background:white;border-bottom:1px solid #ebebeb;}
+        .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+        .logo{font-size:21px;font-family:'Outfit',sans-serif;color:#10367D;text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0;}
+        .logo-box{width:32px;height:32px;display:flex;align-items:center;justify-content:center;}
+
+        .pill{display:flex;align-items:center;border:1px solid #ddd;border-radius:40px;padding:8px 8px 8px 18px;gap:0;box-shadow:0 1px 4px rgba(0,0,0,0.08);transition:box-shadow 0.2s;flex:1;max-width:460px;}
+        .pill:hover{box-shadow:0 2px 10px rgba(0,0,0,0.13);}
+        .pill input{border:none;outline:none;font-size:14px;font-family:'Outfit',sans-serif;color:#222;background:none;flex:1;min-width:0;}
+        .pill input::placeholder{color:#aaa;}
+        .pill-btn{background:#10367D;color:white;border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+        .pill-btn:hover{background:#0B2960;}
+
+        .nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+        .btn-g{border:1px solid #ddd;background:white;padding:9px 16px;border-radius:22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;color:#222;text-decoration:none;transition:background 0.15s;white-space:nowrap;}
+        .btn-g:hover{background:#f7f7f7;}
+        .btn-b{background:#10367D;color:white;border:none;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;transition:background 0.15s;white-space:nowrap;}
+        .btn-b:hover{background:#0B2960;}
+        .hbtn{display:none;background:none;border:1px solid #ddd;border-radius:22px;padding:7px 10px;cursor:pointer;align-items:center;gap:6px;}
+
+        .hero{background:linear-gradient(140deg,#10367D 0%,#10367D 55%,#3b82f6 100%);padding:80px 24px 96px;text-align:center;position:relative;overflow:hidden;}
+        .hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(255,255,255,0.07) 0%,transparent 60%);}
+        .hero-inner{max-width:680px;margin:0 auto;position:relative;z-index:1;}
+        .hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:22px;backdrop-filter:blur(10px);}
+        .hero h1{font-size:clamp(26px,5vw,50px);font-weight:800;color:white;line-height:1.1;margin-bottom:12px;letter-spacing:-0.5px;}
+        .hero p{font-size:clamp(14px,2vw,17px);color:rgba(255,255,255,0.82);margin-bottom:36px;line-height:1.7;}
+
         
-        /* NAV */
-        .nav{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;height:64px;}
-        .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;}
-        .logo{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-        .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;}
-        .nav-search{flex:1;max-width:480px;position:relative;}
-        .nav-search input{width:100%;border:1.5px solid var(--border);border-radius:50px;padding:10px 20px 10px 44px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:all 0.2s;background:var(--bg);}
-        .nav-search input:focus{border-color:var(--blue);background:white;box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
-        .nav-search .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:20px;}
-        .nav-search .clear-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;}
-        .nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-        .btn-nav{border:1.5px solid var(--border);background:white;padding:8px 18px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text);text-decoration:none;transition:all 0.2s;white-space:nowrap;}
-        .btn-nav:hover{background:var(--bg);}
-        .btn-nav-primary{background:var(--blue);color:white;border-color:var(--blue);}
-        .btn-nav-primary:hover{background:#1d4ed8;}
-        .mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text);}
 
-        /* HERO */
-        .hero{background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 50%,#bfdbfe 100%);padding:64px 24px 80px;text-align:center;position:relative;overflow:hidden;}
-        .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-        .hero-inner{max-width:700px;margin:0 auto;position:relative;}
-        .hero-badge{display:inline-flex;align-items:center;gap:6px;background:white;border:1px solid var(--blue-mid);color:var(--blue);padding:6px 16px;border-radius:50px;font-size:13px;font-weight:600;margin-bottom:24px;box-shadow:0 2px 8px rgba(37,99,235,0.12);}
-        .hero h1{font-family:'Sora',sans-serif;font-size:clamp(32px,6vw,56px);font-weight:800;color:var(--navy);line-height:1.1;margin-bottom:16px;}
-        .hero h1 span{color:var(--blue);}
-        .hero p{font-size:clamp(15px,2vw,18px);color:var(--muted);margin-bottom:36px;line-height:1.7;}
-        
-        /* SEARCH BOX */
-        .search-box{background:white;border-radius:20px;padding:8px;box-shadow:0 8px 40px rgba(37,99,235,0.15);display:flex;align-items:center;gap:8px;max-width:640px;margin:0 auto;border:1px solid var(--blue-mid);}
-        .search-box-input{flex:1;border:none;outline:none;padding:12px 16px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text);background:none;}
-        .search-box-input::placeholder{color:var(--muted);}
-        .search-box-btn{background:var(--blue);color:white;border:none;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:all 0.2s;}
-        .search-box-btn:hover{background:#1d4ed8;transform:translateY(-1px);}
+        .fbar{background:#F4F7FC;border-bottom:1px solid #B8CAEB;padding:10px 24px;}
+        .fbar-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+        .fbar-text{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#0B2960;}
+        .fbar-clear{background:white;border:1px solid #B8CAEB;color:#0B2960;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;}
+        .fbar-clear:hover{background:#D5DFEE;}
 
-        /* DROPDOWN */
-        .search-dropdown{position:absolute;top:calc(100% + 8px);left:0;right:0;background:white;border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.12);z-index:300;max-height:320px;overflow-y:auto;}
-        .dropdown-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background 0.15s;}
-        .dropdown-item:hover{background:var(--blue-light);}
-        .dropdown-item:first-child{border-radius:16px 16px 0 0;}
-        .dropdown-item:last-child{border-radius:0 0 16px 16px;}
-        .dropdown-badge{background:var(--blue-light);color:var(--blue);padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700;flex-shrink:0;}
-        .dropdown-name{font-size:14px;font-weight:600;color:var(--text);}
-        .dropdown-loc{font-size:12px;color:var(--muted);}
+        .main{max-width:1280px;margin:0 auto;padding:44px 24px 80px;}
+        .city-sec{margin-bottom:56px;}
+        .city-hd{display:flex;align-items:baseline;gap:10px;margin-bottom:22px;}
+        .city-name{font-size:22px;font-weight:700;color:#222;}
+        .city-sub{font-size:14px;color:#717171;}
 
-        /* UNIVERSITY CHIPS */
-        .uni-scroll{padding:20px 24px;background:white;border-bottom:1px solid var(--border);overflow-x:auto;white-space:nowrap;scrollbar-width:none;}
-        .uni-scroll::-webkit-scrollbar{display:none;}
-        .uni-chips{display:inline-flex;gap:10px;max-width:1280px;margin:0 auto;}
-        .uni-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border:1.5px solid var(--border);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;background:white;color:var(--muted);font-family:'DM Sans',sans-serif;}
-        .uni-chip:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light);}
-        .uni-chip.active{background:var(--blue);color:white;border-color:var(--blue);}
-
-        /* CONTENT */
-        .content{max-width:1280px;margin:0 auto;padding:32px 24px;}
-        .section{margin-bottom:48px;}
-        .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-        .section-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--navy);}
-        .section-sub{font-size:13px;color:var(--muted);margin-top:2px;}
-        .see-all{font-size:13px;font-weight:700;color:var(--blue);text-decoration:none;}
-        .see-all:hover{text-decoration:underline;}
-
-        /* GRID */
-        .hostel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+        /* AIRBNB CARD GRID */
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
 
         /* CARD */
-        .hostel-card{background:white;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:all 0.25s;cursor:pointer;text-decoration:none;display:block;}
-        .hostel-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(37,99,235,0.12);border-color:var(--blue-mid);}
-        .card-img{height:200px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);position:relative;overflow:hidden;}
-        .card-img img{width:100%;height:100%;object-fit:cover;}
-        .card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff,#dbeafe);}
-        .card-badge{position:absolute;top:12px;left:12px;background:white;border-radius:50px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--blue);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-        .card-time{position:absolute;top:12px;right:12px;background:rgba(15,23,42,0.7);backdrop-filter:blur(8px);border-radius:50px;padding:4px 10px;font-size:11px;font-weight:500;color:white;}
-        .card-body{padding:16px;}
-        .card-uni{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;display:flex;align-items:center;gap:4px;}
-        .card-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;line-height:1.3;}
-        .card-location{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:4px;margin-bottom:12px;}
-        .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
-        .card-price{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--navy);}
-        .card-price-label{font-size:11px;color:var(--muted);font-weight:400;}
-        .card-rooms{background:var(--blue-light);color:var(--blue);padding:4px 10px;border-radius:50px;font-size:12px;font-weight:600;}
+        .card{text-decoration:none;color:inherit;display:block;}
+        .card:hover .card-img img{transform:scale(1.05);}
+        .card-img{border-radius:14px;overflow:hidden;aspect-ratio:4/3;background:#f0f0f0;position:relative;margin-bottom:12px;}
+        .card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;}
+        .card-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F4F7FC,#D5DFEE);}
+        .badge-v{position:absolute;top:12px;left:12px;background:white;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#222;box-shadow:0 1px 4px rgba(0,0,0,0.14);}
+        .badge-t{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);color:white;padding:3px 9px;border-radius:20px;font-size:11px;}
 
-        /* AMENITY PILLS */
-        .amenity-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-        .amenity-pill{background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:50px;font-size:11px;}
+        .card-info{}
+        .card-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:2px;}
+        .card-name{font-size:14px;font-weight:700;color:#222;flex:1;line-height:1.3;}
+        .card-star{display:flex;align-items:center;gap:2px;font-size:13px;font-weight:600;color:#222;flex-shrink:0;}
+        .card-loc{font-size:13px;color:#717171;margin-bottom:3px;}
+        .card-uni{font-size:12px;color:#10367D;font-weight:600;display:flex;align-items:center;gap:3px;margin-bottom:6px;}
+        .card-price{font-size:14px;color:#222;margin-top:2px;}
+        .card-rooms-tag{display:inline-flex;align-items:center;gap:3px;background:#f3f4f6;color:#374151;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;margin-top:5px;}
 
-        /* EMPTY */
         .empty{text-align:center;padding:80px 24px;}
-        .empty-icon{width:72px;height:72px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
-        .empty h3{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px;}
-        .empty p{color:var(--muted);font-size:15px;}
+        .empty h3{font-size:20px;font-weight:700;margin-bottom:8px;}
+        .empty p{color:#717171;font-size:14px;line-height:1.7;}
 
-        /* STATS BAR */
-        .stats-bar{background:var(--navy);color:white;padding:20px 24px;}
-        .stats-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-around;gap:24px;flex-wrap:wrap;}
-        .stat{text-align:center;}
-        .stat-num{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:white;}
-        .stat-label{font-size:13px;color:rgba(255,255,255,0.5);margin-top:2px;}
+        .cta{background:#060E1C;border-radius:20px;padding:52px 40px;text-align:center;margin-top:8px;}
+        .cta h2{font-size:26px;font-weight:800;color:white;margin-bottom:10px;}
+        .cta p{color:rgba(255,255,255,0.65);font-size:15px;margin-bottom:28px;line-height:1.7;}
+        .cta a{background:white;color:#060E1C;padding:13px 34px;border-radius:50px;font-weight:700;font-size:15px;text-decoration:none;display:inline-block;}
+        .cta a:hover{background:#F4F7FC;color:#10367D;}
 
-        /* LOADING */
-        .loading{display:flex;align-items:center;justify-content:center;min-height:300px;gap:12px;color:var(--muted);}
-        .spinner{width:28px;height:28px;border:3px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;}
+        footer{background:#f7f7f7;border-top:1px solid #ebebeb;padding:28px 24px;}
+        .foot-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:#717171;}
+        .foot-links{display:flex;gap:20px;}
+        .foot-links a{color:#717171;text-decoration:none;}
+        .foot-links a:hover{color:#222;}
+
+        .spin{width:32px;height:32px;border:3px solid #D5DFEE;border-top-color:#10367D;border-radius:50%;animation:spin 0.8s linear infinite;margin:100px auto;}
         @keyframes spin{to{transform:rotate(360deg);}}
 
-        /* MOBILE NAV MENU */
-        .mobile-menu{position:fixed;inset:0;background:white;z-index:500;padding:24px;display:flex;flex-direction:column;gap:16px;transform:translateX(100%);transition:transform 0.3s;}
-        .mobile-menu.open{transform:translateX(0);}
-        .mobile-menu-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+        .drawer{position:fixed;inset:0;background:white;z-index:600;padding:24px;display:flex;flex-direction:column;gap:12px;transform:translateX(100%);transition:transform 0.28s ease;overflow-y:auto;}
+        .drawer.open{transform:translateX(0);}
+        .drawer-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+        .drawer-close{background:none;border:1px solid #ddd;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+        .drawer-input{border:1.5px solid #ddd;border-radius:12px;padding:12px 16px;font-size:14px;font-family:'Outfit',sans-serif;outline:none;width:100%;}
+        .drawer-input:focus{border-color:#10367D;}
+        .drawer-btn{display:block;padding:13px 16px;border:1px solid #ddd;border-radius:12px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:#222;transition:background 0.15s;}
+        .drawer-btn:hover{background:#f7f7f7;}
+        .drawer-btn.primary{background:#10367D;color:white;border-color:#10367D;}
+        .drawer-btn.primary:hover{background:#0B2960;}
 
-        /* RESPONSIVE */
+        @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr);}}
         @media(max-width:768px){
-          .nav-search{display:none;}
-          .mobile-menu-btn{display:flex;}
-          .btn-nav{display:none;}
-          .btn-nav.mobile-show{display:flex;}
-          .hero{padding:40px 20px 56px;}
-          .search-box{flex-direction:column;padding:12px;}
-          .search-box-btn{width:100%;justify-content:center;}
-          .hostel-grid{grid-template-columns:1fr;}
-          .content{padding:24px 16px;}
-          .stats-inner{gap:16px;}
-          .stat-num{font-size:22px;}
+          .pill{display:none;} .hbtn{display:flex;}
+          .nav-actions .btn-g,.nav-actions .btn-b{display:none;}
+          .hero{padding:52px 20px 72px;}
+
+          .main{padding:28px 16px 60px;}
+          .grid{grid-template-columns:repeat(2,1fr);gap:16px;}
+          .card-name{font-size:13px;}
+          .city-name{font-size:18px;}
+          .cta{padding:36px 24px;}
+          .cta h2{font-size:22px;}
         }
         @media(max-width:480px){
-          .hostel-grid{grid-template-columns:1fr;}
-          .section-title{font-size:18px;}
+          .grid{grid-template-columns:1fr 1fr;gap:12px;}
+          .hero h1{font-size:24px;}
+          .card-img{border-radius:10px;}
         }
-
-        /* FILTER ACTIVE BAR */
-        .filter-bar{background:var(--blue-light);border-bottom:1px solid var(--blue-mid);padding:12px 24px;}
-        .filter-bar-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-        .filter-text{font-size:14px;font-weight:600;color:var(--blue);}
-        .filter-clear{background:var(--blue);color:white;border:none;padding:6px 16px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
-
-        /* SCROLL CARDS (horizontal) */
-        .scroll-section{overflow-x:auto;scrollbar-width:none;margin:0 -24px;padding:0 24px;}
-        .scroll-section::-webkit-scrollbar{display:none;}
-        .scroll-cards{display:flex;gap:20px;width:max-content;padding-bottom:4px;}
-        .scroll-cards .hostel-card{width:280px;flex-shrink:0;}
+        @media(max-width:360px){.grid{grid-template-columns:1fr;}}
       `}</style>
 
-      {/* NAV */}
+      {/* ── NAVBAR ── */}
       <nav className="nav">
         <div className="nav-inner">
           <Link href="/" className="logo">
-            <div className="logo-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 22V12h6v10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className="logo-box">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="46" fill="white" stroke="#10367D" strokeWidth="7"/><path d="M70 22 C70 44 55 50 50 50 C45 50 30 56 30 78" stroke="#10367D" strokeWidth="6.5" strokeLinecap="round" fill="none"/><rect x="23" y="71" width="14" height="14" rx="2.2" fill="#B5CE00"/><circle cx="70" cy="22" r="5.5" fill="#B5CE00"/><circle cx="73" cy="68" r="7.5" stroke="#10367D" strokeWidth="4" fill="none"/><line x1="67.7" y1="62.7" x2="62.7" y2="57.7" stroke="#10367D" strokeWidth="4" strokeLinecap="round"/></svg>
             </div>
-            DormLink
+            <span style={{fontWeight:300,letterSpacing:'-0.02em'}}>Saka</span><span style={{fontWeight:700,letterSpacing:'-0.02em'}}>Boma</span>
           </Link>
 
-          <div className="nav-search" ref={searchRef} style={{position:'relative'}}>
-            <span className="material-icons-round search-icon">search</span>
+          {/* Pill search — desktop */}
+          <div className="pill" ref={searchRef} style={{position:'relative'}}>
             <input
-              placeholder="Search university or location..."
-              value={searchQuery}
-              onChange={e => handleSearch(e.target.value)}
-              onFocus={() => searchQuery && setShowDropdown(true)}
+              placeholder="Search university or city..."
+              value={query}
+              onChange={e => onType(e.target.value)}
+              onFocus={() => query && setShowDrop(true)}
             />
-            {searchQuery && (
-              <button className="clear-btn" onClick={clearSearch}>
-                <span className="material-icons-round" style={{fontSize:'18px'}}>close</span>
+            {query && (
+              <button onClick={clear} style={{background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',color:'#aaa',padding:'0 6px'}}>
+                <span className="material-icons-round" style={{fontSize:16}}>close</span>
               </button>
             )}
-            {showDropdown && searchResults.length > 0 && (
-              <div className="search-dropdown">
-                {searchResults.map((u, i) => (
-                  <div key={i} className="dropdown-item" onClick={() => selectUniversity(u)}>
-                    <span className="material-icons-round" style={{color:'#2563eb',fontSize:'20px'}}>school</span>
-                    <div style={{flex:1}}>
-                      <div className="dropdown-name">{u.name}</div>
-                      <div className="dropdown-loc">{u.location}</div>
-                    </div>
-                    <span className="dropdown-badge">{u.short}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <button className="pill-btn"><span className="material-icons-round" style={{fontSize:18}}>search</span></button>
+            <SearchDropdown />
           </div>
 
-          <div className="nav-right">
+          <div className="nav-actions">
             {user ? (
               <>
-                <Link href={`/${user.role}/dashboard`} className="btn-nav">Dashboard</Link>
-                <button className="btn-nav btn-nav-primary" onClick={logout}>Sign Out</button>
+                <Link href={`/${user.role}/dashboard`} className="btn-g">My Dashboard</Link>
+                <button className="btn-b" onClick={logout}>Sign Out</button>
               </>
             ) : (
               <>
-                <Link href="/login" className="btn-nav">Log In</Link>
-                <Link href="/register" className="btn-nav btn-nav-primary">Sign Up</Link>
+                <Link href="/login" className="btn-g">Log In</Link>
+                <Link href="/register" className="btn-b">Sign Up</Link>
               </>
             )}
-            <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)}>
-              <span className="material-icons-round">menu</span>
+            <button className="hbtn" onClick={() => setMenuOpen(true)}>
+              <span className="material-icons-round" style={{fontSize:18}}>menu</span>
             </button>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE MENU */}
-      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-header">
-          <span style={{fontFamily:'Sora',fontWeight:800,fontSize:'20px',color:'#2563eb'}}>DormLink</span>
-          <button style={{background:'none',border:'none',cursor:'pointer'}} onClick={() => setMenuOpen(false)}>
-            <span className="material-icons-round">close</span>
+      {/* ── MOBILE DRAWER ── */}
+      <div className={`drawer ${menuOpen?'open':''}`}>
+        <div className="drawer-hd">
+          <span style={{fontWeight:800,fontSize:20,color:'#10367D'}}>SakaBoma</span>
+          <button className="drawer-close" onClick={() => setMenuOpen(false)}>
+            <span className="material-icons-round" style={{fontSize:18}}>close</span>
           </button>
         </div>
-        <input
-          style={{width:'100%',border:'1.5px solid #e2e8f0',borderRadius:'50px',padding:'12px 20px',fontSize:'14px',outline:'none',fontFamily:'DM Sans,sans-serif'}}
-          placeholder="Search university..."
-          value={searchQuery}
-          onChange={e => { handleSearch(e.target.value); }}
-        />
-        {searchResults.length > 0 && searchQuery && (
-          <div style={{background:'white',border:'1px solid #e2e8f0',borderRadius:'12px',overflow:'hidden'}}>
-            {searchResults.slice(0,6).map((u,i) => (
-              <div key={i} style={{padding:'12px 16px',cursor:'pointer',borderBottom:'1px solid #f1f4f9'}}
-                onClick={() => { selectUniversity(u); setMenuOpen(false); }}>
-                <div style={{fontWeight:600,fontSize:'14px'}}>{u.name}</div>
-                <div style={{fontSize:'12px',color:'#64748b'}}>{u.location}</div>
+        <input className="drawer-input" placeholder="Search university or city..."
+          value={query} onChange={e => onType(e.target.value)}/>
+        {suggestions.length > 0 && query && (
+          <div style={{border:'1px solid #ebebeb',borderRadius:12,overflow:'hidden'}}>
+            {suggestions.map((s,i) => (
+              <div key={i} onClick={() => { pick(s); setMenuOpen(false); }}
+                style={{padding:'11px 16px',cursor:'pointer',borderBottom:'1px solid #f5f5f5'}}>
+                <div style={{fontWeight:600,fontSize:14}}>{s.label}</div>
+                <div style={{fontSize:12,color:'#717171'}}>{s.sub}</div>
               </div>
             ))}
           </div>
         )}
-        <div style={{display:'flex',flexDirection:'column',gap:'10px',marginTop:'8px'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:8,marginTop:8}}>
           {user ? (
             <>
-              <Link href={`/${user.role}/dashboard`} className="btn-nav" style={{display:'block',textAlign:'center',padding:'12px'}} onClick={() => setMenuOpen(false)}>My Dashboard</Link>
-              <button className="btn-nav btn-nav-primary" style={{padding:'12px',borderRadius:'50px'}} onClick={() => { logout(); setMenuOpen(false); }}>Sign Out</button>
+              <Link href={`/${user.role}/dashboard`} className="drawer-btn" onClick={()=>setMenuOpen(false)}>My Dashboard</Link>
+              <button className="drawer-btn primary" onClick={()=>{logout();setMenuOpen(false);}}>Sign Out</button>
             </>
           ) : (
             <>
-              <Link href="/login" className="btn-nav" style={{display:'block',textAlign:'center',padding:'12px'}} onClick={() => setMenuOpen(false)}>Log In</Link>
-              <Link href="/register" className="btn-nav btn-nav-primary" style={{display:'block',textAlign:'center',padding:'12px'}} onClick={() => setMenuOpen(false)}>Sign Up Free</Link>
+              <Link href="/login" className="drawer-btn" onClick={()=>setMenuOpen(false)}>Log In</Link>
+              <Link href="/register" className="drawer-btn primary" onClick={()=>setMenuOpen(false)}>Sign Up Free</Link>
             </>
           )}
         </div>
       </div>
 
-      {/* HERO */}
+      {/* ── HERO ── */}
       <section className="hero">
         <div className="hero-inner">
-          <div className="hero-badge">
-            <span className="material-icons-round" style={{fontSize:'14px'}}>verified</span>
-            Tanzania's #1 Student Accommodation Platform
+          <div className="hero-pill">
+            <span className="material-icons-round" style={{fontSize:13}}>verified</span>
+            Tanzania's #1 Student Accommodation Platform — 44+ Universities
           </div>
-          <h1>Find Your Perfect <span>Student Home</span></h1>
-          <p>Search hostels near your university across Tanzania. Book securely, pay safely, move in confidently.</p>
-          <div className="search-box" ref={searchRef} style={{position:'relative'}}>
-            <span className="material-icons-round" style={{color:'#2563eb',fontSize:'22px',flexShrink:0,marginLeft:'8px'}}>school</span>
-            <input
-              className="search-box-input"
-              placeholder="Search your university e.g. UDSM, UDOM, SUA..."
-              value={searchQuery}
-              onChange={e => handleSearch(e.target.value)}
-              onFocus={() => searchQuery && setShowDropdown(true)}
-            />
-            <button className="search-box-btn" onClick={() => searchQuery && setShowDropdown(true)}>
-              <span className="material-icons-round" style={{fontSize:'18px'}}>search</span>
-              Search
-            </button>
-            {showDropdown && searchResults.length > 0 && (
-              <div className="search-dropdown" style={{top:'calc(100% + 8px)',left:0,right:0}}>
-                {searchResults.map((u, i) => (
-                  <div key={i} className="dropdown-item" onClick={() => selectUniversity(u)}>
-                    <span className="material-icons-round" style={{color:'#2563eb',fontSize:'20px'}}>school</span>
-                    <div style={{flex:1}}>
-                      <div className="dropdown-name">{u.name}</div>
-                      <div className="dropdown-loc">{u.location}</div>
-                    </div>
-                    <span className="dropdown-badge">{u.short}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+          <h1>Find Your Perfect Student Home</h1>
+          <p>Search hostels near any university across Tanzania. Book securely, pay safely, move in confidently.</p>
+
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'20px',flexWrap:'wrap',marginTop:'4px'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'6px',fontSize:'13px',color:'rgba(255,255,255,0.6)',fontWeight:500}}>
+              <span className="material-icons-round" style={{fontSize:'14px',color:'#B5CE00'}}>verified</span>
+              Verified Properties
+            </div>
+            <div style={{width:'1px',height:'14px',background:'rgba(255,255,255,0.2)'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:'6px',fontSize:'13px',color:'rgba(255,255,255,0.6)',fontWeight:500}}>
+              <span className="material-icons-round" style={{fontSize:'14px',color:'#B5CE00'}}>school</span>
+              44+ Universities Covered
+            </div>
+            <div style={{width:'1px',height:'14px',background:'rgba(255,255,255,0.2)'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:'6px',fontSize:'13px',color:'rgba(255,255,255,0.6)',fontWeight:500}}>
+              <span className="material-icons-round" style={{fontSize:'14px',color:'#B5CE00'}}>payments</span>
+              Secure Payments
+            </div>
           </div>
         </div>
       </section>
 
-      {/* STATS BAR */}
-      <div className="stats-bar">
-        <div className="stats-inner">
-          {[
-            { num: `${hostels.length}+`, label: 'Listed Hostels' },
-            { num: '44+', label: 'Universities Covered' },
-            { num: '20+', label: 'Cities in Tanzania' },
-            { num: '100%', label: 'Verified Properties' },
-          ].map((s, i) => (
-            <div key={i} className="stat">
-              <div className="stat-num">{s.num}</div>
-              <div className="stat-label">{s.label}</div>
+      {/* ── ACTIVE FILTER BAR ── */}
+      {activeFilter && (
+        <div className="fbar">
+          <div className="fbar-inner">
+            <div className="fbar-text">
+              <span className="material-icons-round" style={{fontSize:15}}>school</span>
+              Hostels near {activeFilter.label} · {filtered.length} found
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* UNIVERSITY CHIPS */}
-      <div className="uni-scroll">
-        <div className="uni-chips">
-          <div
-            className={`uni-chip ${!selectedUniversity ? 'active' : ''}`}
-            onClick={clearSearch}
-          >
-            <span className="material-icons-round" style={{fontSize:'16px'}}>apps</span>
-            All
-          </div>
-          {TANZANIA_UNIVERSITIES.slice(0, 20).map((u, i) => (
-            <div
-              key={i}
-              className={`uni-chip ${selectedUniversity?.short === u.short ? 'active' : ''}`}
-              onClick={() => selectUniversity(u)}
-            >
-              {u.short}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* FILTER BAR */}
-      {selectedUniversity && (
-        <div className="filter-bar">
-          <div className="filter-bar-inner">
-            <div className="filter-text">
-              <span className="material-icons-round" style={{fontSize:'16px',verticalAlign:'middle',marginRight:'6px'}}>school</span>
-              Showing hostels near {selectedUniversity.name} · {filteredHostels.length} found
-            </div>
-            <button className="filter-clear" onClick={clearSearch}>Clear filter</button>
+            <button className="fbar-clear" onClick={clear}><span className="material-icons-round" style={{fontSize:'13px',verticalAlign:'middle',marginRight:'3px'}}>close</span>Clear</button>
           </div>
         </div>
       )}
 
-      {/* MAIN CONTENT */}
-      <main className="content">
+      {/* ── MAIN CONTENT ── */}
+      <main className="main">
         {loading ? (
-          <div className="loading">
-            <div className="spinner"/>
-            Finding hostels near you...
-          </div>
-        ) : filteredHostels.length === 0 ? (
+          <div className="spin"/>
+        ) : filtered.length === 0 ? (
           <div className="empty">
-            <div className="empty-icon">
-              <span className="material-icons-round" style={{color:'#2563eb',fontSize:'32px'}}>search_off</span>
-            </div>
+            <span className="material-icons-round" style={{fontSize:52,color:'#ddd',display:'block',marginBottom:16}}>search_off</span>
             <h3>No hostels found</h3>
-            <p>No hostels listed yet for this university. Check back soon or{' '}
-              <Link href="/register" style={{color:'#2563eb',fontWeight:700}}>list your property</Link>
+            <p>No hostels listed yet for this area.<br/>
+              Try a different search or{' '}
+              <Link href="/register" style={{color:'#10367D',fontWeight:700}}>list your property</Link>.
             </p>
           </div>
         ) : (
-          <>
-            {/* Group by location */}
-            {Object.entries(groupedByLocation()).map(([city, cityHostels]) => (
-              <section key={city} className="section">
-                <div className="section-header">
-                  <div>
-                    <div className="section-title">
-                      <span className="material-icons-round" style={{fontSize:'20px',verticalAlign:'middle',marginRight:'6px',color:'#2563eb'}}>location_on</span>
-                      Hostels in {city}
+          Object.entries(grouped).map(([city, list]) => (
+            <section key={city} className="city-sec">
+              <div className="city-hd">
+                <div className="city-name"><span className="material-icons-round" style={{fontSize:'18px',color:'#10367D',verticalAlign:'middle',marginRight:'6px'}}>{CITY_ICON[city]||'home'}</span>{city}</div>
+                <div className="city-sub">{list.length} {list.length===1?'place':'places'} to stay</div>
+              </div>
+              <div className="grid">
+                {list.map(h => (
+                  <Link key={h.id} href={`/hostels/${h.id}`} className="card">
+                    <div className="card-img">
+                      {h.image_url
+                        ? <img src={h.image_url} alt={h.name} loading="lazy"/>
+                        : <div className="card-img-ph"><span className="material-icons-round" style={{fontSize:52,color:'#B8CAEB'}}>apartment</span></div>
+                      }
+                      <div className="badge-v">
+                        <span className="material-icons-round" style={{fontSize:10,verticalAlign:'middle',marginRight:2}}>verified</span>
+                        Verified
+                      </div>
+                      {timeAgo(h.created_at) && <div className="badge-t">{timeAgo(h.created_at)}</div>}
                     </div>
-                    <div className="section-sub">{cityHostels.length} properties available</div>
-                  </div>
-                </div>
-
-                {/* Mobile: horizontal scroll. Desktop: grid */}
-                <div className="scroll-section" style={{display:'none'}}/>
-                <div className="hostel-grid">
-                  {cityHostels.map(hostel => (
-                    <Link key={hostel.id} href={`/hostels/${hostel.id}`} className="hostel-card">
-                      <div className="card-img">
-                        {hostel.image_url ? (
-                          <img src={hostel.image_url} alt={hostel.name} loading="lazy"/>
-                        ) : (
-                          <div className="card-img-placeholder">
-                            <span className="material-icons-round" style={{fontSize:'48px',color:'#93c5fd'}}>apartment</span>
-                          </div>
-                        )}
-                        <div className="card-badge">
-                          <span className="material-icons-round" style={{fontSize:'10px',verticalAlign:'middle',marginRight:'2px'}}>verified</span>
-                          Verified
+                    <div className="card-info">
+                      <div className="card-row1">
+                        <div className="card-name">{h.name}</div>
+                        <div className="card-star">
+                          <span className="material-icons-round" style={{fontSize:13,color:'#f59e0b'}}>star</span>
+                          {h.rating ? h.rating.toFixed(1) : 'New'}
                         </div>
-                        {hostel.created_at && (
-                          <div className="card-time">{getTimeAgo(hostel.created_at)}</div>
-                        )}
                       </div>
-                      <div className="card-body">
+                      <div className="card-loc">
+                        {h.address || h.city}
+                        {h.distance_from_university && ` · ${h.distance_from_university}km from campus`}
+                      </div>
+                      {h.universities?.name && (
                         <div className="card-uni">
-                          <span className="material-icons-round" style={{fontSize:'12px'}}>school</span>
-                          Near {hostel.universities?.name || hostel.city}
+                          <span className="material-icons-round" style={{fontSize:12}}>school</span>
+                          Near {h.universities.name}
                         </div>
-                        <div className="card-name">{hostel.name}</div>
-                        <div className="card-location">
-                          <span className="material-icons-round" style={{fontSize:'14px'}}>place</span>
-                          {hostel.address}, {hostel.city}
-                          {hostel.distance_from_university && (
-                            <span style={{marginLeft:'4px'}}>· {hostel.distance_from_university}km away</span>
-                          )}
-                        </div>
-                        {hostel.amenities?.length > 0 && (
-                          <div className="amenity-pills">
-                            {hostel.amenities.slice(0, 3).map((a, i) => (
-                              <span key={i} className="amenity-pill">{a}</span>
-                            ))}
-                            {hostel.amenities.length > 3 && (
-                              <span className="amenity-pill">+{hostel.amenities.length - 3} more</span>
-                            )}
-                          </div>
-                        )}
-                        <div className="card-footer">
-                          <div>
-                            <div className="card-price">
-                              TZS {hostel.rooms?.[0]?.price_per_semester
-                                ? parseFloat(hostel.rooms[0].price_per_semester).toLocaleString()
-                                : hostel.rooms?.[0]?.price_per_month
-                                  ? parseFloat(hostel.rooms[0].price_per_month * 4).toLocaleString()
-                                  : '—'}
-                              <span className="card-price-label"> /semester</span>
-                            </div>
-                            <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'2px'}}>per person</div>
-                          </div>
-                          <div className="card-rooms">
-                            {hostel.rooms?.length || 0} room type{hostel.rooms?.length !== 1 ? 's' : ''}
-                          </div>
-                        </div>
+                      )}
+                      {price(h)
+                        ? <div className="card-price"><strong>{price(h)}</strong> <span style={{color:'#717171',fontWeight:400}}>/ semester</span></div>
+                        : <div style={{fontSize:13,color:'#aaa',marginTop:4}}>Contact for price</div>
+                      }
+                      <div className="card-rooms-tag">
+                        <span className="material-icons-round" style={{fontSize:12}}>bed</span>
+                        {h.rooms?.length||0} room type{h.rooms?.length!==1?'s':''}
                       </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ))
         )}
 
-        {/* Are you a host? CTA */}
-        {!user || user.role !== 'host' ? (
-          <div style={{background:'linear-gradient(135deg,#1e3a8a,#2563eb)',borderRadius:'20px',padding:'40px',textAlign:'center',marginTop:'32px',color:'white'}}>
-            <div style={{fontFamily:'Sora',fontSize:'24px',fontWeight:'800',marginBottom:'8px'}}>Are you a hostel owner?</div>
-            <div style={{fontSize:'15px',opacity:0.8,marginBottom:'24px'}}>List your property on DormLink and reach thousands of students across Tanzania</div>
-            <Link href="/register"
-              style={{background:'white',color:'#1e3a8a',padding:'12px 32px',borderRadius:'50px',fontWeight:700,fontSize:'15px',textDecoration:'none',display:'inline-block',transition:'all 0.2s'}}>
-              List Your Property Free →
-            </Link>
+        {(!user || user.role!=='host') && (
+          <div className="cta">
+            <h2>Own a Hostel? List it Free</h2>
+            <p>Reach thousands of students across Tanzania looking for accommodation near their university. Get bookings and manage everything in one place.</p>
+            <Link href="/register">List Your Property →</Link>
           </div>
-        ) : null}
+        )}
       </main>
 
-      {/* FOOTER */}
-      <footer style={{background:' #0f172a',color:'rgba(255,255,255,0.5)',padding:'32px 24px',textAlign:'center',marginTop:'48px'}}>
-        <div style={{fontFamily:'Sora',fontSize:'18px',fontWeight:'800',color:'white',marginBottom:'8px'}}>DormLink</div>
-        <div style={{fontSize:'13px',marginBottom:'16px'}}>Tanzania's Student Accommodation Platform</div>
-        <div style={{display:'flex',gap:'20px',justifyContent:'center',flexWrap:'wrap',fontSize:'13px'}}>
-          <Link href="/login" style={{color:'rgba(255,255,255,0.5)',textDecoration:'none'}}>Login</Link>
-          <Link href="/register" style={{color:'rgba(255,255,255,0.5)',textDecoration:'none'}}>Register</Link>
-          <span>© {new Date().getFullYear()} DormLink Tanzania</span>
+      <footer>
+        <div className="foot-in">
+          <div style={{fontFamily:"'Outfit',sans-serif",fontSize:16,color:'#0D1830'}}><span style={{fontWeight:300}}>Saka</span><span style={{fontWeight:700}}>Boma</span></div>
+          <div className="foot-links">
+            <a href="/login">Log In</a>
+            <a href="/register">Register</a>
+            <span>© {new Date().getFullYear()} SakaBoma Tanzania</span>
+          </div>
         </div>
       </footer>
     </>

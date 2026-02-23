@@ -1,7 +1,5 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/admin/dashboard/page": "app/admin/dashboard/page.js",
-  "/host/dashboard/page": "app/host/dashboard/page.js",
   "/hostels/[id]/page": "app/hostels/[id]/page.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",

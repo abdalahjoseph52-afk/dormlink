@@ -6,6 +6,7 @@ __turbopack_context__.s([
     "default",
     ()=>HostDashboard
 ]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/Desktop/dormlink/frontend/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/dormlink/frontend/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/dormlink/frontend/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/dormlink/frontend/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
@@ -22,2156 +23,3479 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const AMENITY_ICONS = {
-    'WiFi': 'wifi',
-    'Water': 'water_drop',
-    'Security': 'security',
-    'Kitchen': 'kitchen',
-    'Parking': 'local_parking',
-    'Laundry': 'local_laundry_service',
-    'Generator': 'bolt',
-    'CCTV': 'videocam',
-    'Gym': 'fitness_center',
-    'Study Room': 'menu_book',
-    'Cleaning': 'cleaning_services',
-    'Air Conditioning': 'ac_unit',
-    'Hot Shower': 'shower',
-    'Furnished': 'chair',
-    'Garden': 'park',
-    'Elevator': 'elevator'
-};
-const ROOM_TYPES = [
-    {
-        value: 'Single Room',
-        label: 'Single Room',
-        icon: 'bed',
-        desc: '1 person only'
-    },
-    {
-        value: '2 Person Shared',
-        label: '2 Person Shared',
-        icon: 'bedroom_parent',
-        desc: '2 persons share'
-    },
-    {
-        value: '3 Person Shared',
-        label: '3 Person Shared',
-        icon: 'bedroom_child',
-        desc: '3 persons share'
-    },
-    {
-        value: '4 Person Shared',
-        label: '4 Person Shared',
-        icon: 'group',
-        desc: '4 persons share'
-    },
-    {
-        value: 'Self Contained',
-        label: 'Self Contained',
-        icon: 'home',
-        desc: 'Private bathroom'
-    },
-    {
-        value: 'Studio',
-        label: 'Studio',
-        icon: 'apartment',
-        desc: 'Full private unit'
-    }
+const AMENITIES = [
+    'WiFi',
+    'Water',
+    'Security',
+    'Kitchen',
+    'Parking',
+    'Laundry',
+    'Generator',
+    'CCTV',
+    'Gym',
+    'Study Room',
+    'Hot Shower',
+    'Furnished'
 ];
+const ROOM_TYPES = [
+    'Single Room',
+    'Double Room',
+    'Triple Room',
+    'Quad Room',
+    'Self Contained',
+    'Studio'
+];
+const ROOM_CAPACITIES = {
+    'Single Room': 1,
+    'Double Room': 2,
+    'Triple Room': 3,
+    'Quad Room': 4,
+    'Self Contained': 2,
+    'Studio': 1
+};
+const SB = {
+    pending: {
+        bg: '#fef3c7',
+        color: '#92400e',
+        dot: '#f59e0b',
+        label: 'Pending'
+    },
+    confirmed: {
+        bg: '#d1fae5',
+        color: '#065f46',
+        dot: '#10b981',
+        label: 'Confirmed'
+    },
+    cancelled: {
+        bg: '#fee2e2',
+        color: '#991b1b',
+        dot: '#ef4444',
+        label: 'Cancelled'
+    },
+    unpaid: {
+        bg: '#fee2e2',
+        color: '#991b1b',
+        dot: '#ef4444',
+        label: 'Unpaid'
+    },
+    pending_confirmation: {
+        bg: '#fef3c7',
+        color: '#92400e',
+        dot: '#f59e0b',
+        label: 'Verifying'
+    },
+    paid: {
+        bg: '#d1fae5',
+        color: '#065f46',
+        dot: '#10b981',
+        label: 'Paid'
+    },
+    approved: {
+        bg: '#d1fae5',
+        color: '#065f46',
+        dot: '#10b981',
+        label: 'Live'
+    },
+    rejected: {
+        bg: '#fee2e2',
+        color: '#991b1b',
+        dot: '#ef4444',
+        label: 'Rejected'
+    }
+};
 function HostDashboard() {
     _s();
     const { user, logout, loading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$context$2f$AuthContext$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [hostels, setHostels] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [bookings, setBookings] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [universities, setUniversities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [tab, setTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('hostels');
+    const [subTab, setSubTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null); // hostel id for room view
+    const [sideOpen, setSideOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [dataLoading, setDataLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
-    const [showHostelForm, setShowHostelForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [showRoomForm, setShowRoomForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [selectedHostel, setSelectedHostel] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [selectedAmenities, setSelectedAmenities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [selectedUniversities, setSelectedUniversities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [imageFile, setImageFile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [imagePreview, setImagePreview] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [formLoading, setFormLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('properties');
+    const [actionLoading, setActionLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [modal, setModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [deletePassword, setDeletePassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    // Forms
     const [hostelForm, setHostelForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         name: '',
-        description: '',
-        address: '',
         city: '',
+        address: '',
+        description: '',
         university_id: '',
-        distance_from_university: ''
+        distance_from_university: '',
+        amenities: [],
+        transport_notes: '',
+        latitude: '',
+        longitude: ''
     });
+    const addressInputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const autocompleteRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const [mapsLoaded, setMapsLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [roomForm, setRoomForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        room_type: '',
-        price_per_month: '',
-        capacity: '',
-        available_count: '',
-        description: ''
+        room_label: '',
+        room_type: 'Single Room',
+        floor: '',
+        capacity: 1,
+        price_per_semester: '',
+        available_count: 1,
+        description: '',
+        features: []
     });
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "HostDashboard.useEffect": ()=>{
             if (loading) return;
-            if (!user) {
+            if (!user || user.role !== 'host') {
                 router.push('/login');
                 return;
             }
-            if (user.role !== 'host') {
-                router.push('/login');
-                return;
-            }
-            fetchData();
+            fetchAll();
         }
     }["HostDashboard.useEffect"], [
         user,
         loading
     ]);
-    const fetchData = async ()=>{
+    const fetchAll = async ()=>{
+        setDataLoading(true);
         try {
-            const [h, b, u] = await Promise.all([
-                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/hostels/my/listings'),
-                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/bookings/host'),
-                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/hostels/universities')
+            const [h, b] = await Promise.all([
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/host/hostels'),
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/host/bookings').catch(()=>({
+                        data: {
+                            bookings: []
+                        }
+                    }))
             ]);
-            setHostels(h.data.hostels);
-            setBookings(b.data.bookings);
-            setUniversities(u.data.universities);
+            setHostels(h.data.hostels || []);
+            setBookings(b.data.bookings || []);
         } catch (e) {
             console.error(e);
         } finally{
             setDataLoading(false);
         }
     };
-    const toggleAmenity = (amenity)=>{
-        setSelectedAmenities((prev)=>prev.includes(amenity) ? prev.filter((a)=>a !== amenity) : [
-                ...prev,
-                amenity
-            ]);
-    };
-    const toggleUniversity = (uid)=>{
-        setSelectedUniversities((prev)=>prev.includes(uid) ? prev.filter((u)=>u !== uid) : [
-                ...prev,
-                uid
-            ]);
-    };
-    const handleImageChange = (e)=>{
-        const file = e.target.files[0];
-        if (!file) return;
-        setImageFile(file);
-        const reader = new FileReader();
-        reader.onload = (e)=>setImagePreview(e.target.result);
-        reader.readAsDataURL(file);
-    };
-    const handleSubmitHostel = async (e)=>{
-        e.preventDefault();
-        if (selectedAmenities.length === 0) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Please select at least one amenity');
+    // ── Google Maps Places Autocomplete ─────────────────────────────
+    const loadGoogleMaps = ()=>{
+        if (window.google?.maps?.places) {
+            setMapsLoaded(true);
             return;
         }
-        setFormLoading(true);
-        try {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/hostels', {
-                ...hostelForm,
-                university_id: hostelForm.university_id,
-                amenities: selectedAmenities
-            });
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Property submitted for approval!');
-            setShowHostelForm(false);
-            setHostelForm({
-                name: '',
-                description: '',
-                address: '',
-                city: '',
-                university_id: '',
-                distance_from_university: ''
-            });
-            setSelectedAmenities([]);
-            setImageFile(null);
-            setImagePreview(null);
-            fetchData();
-        } catch (e) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed to submit property');
-        } finally{
-            setFormLoading(false);
-        }
+        if (document.getElementById('gmaps-script')) return;
+        const script = document.createElement('script');
+        script.id = 'gmaps-script';
+        // Add NEXT_PUBLIC_GOOGLE_MAPS_KEY to your .env.local file
+        // Get key at: console.cloud.google.com → Enable Places API + Maps JavaScript API
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || ''}&libraries=places&callback=dormLinkMapsInit`;
+        script.async = true;
+        script.defer = true;
+        window.dormLinkMapsInit = ()=>setMapsLoaded(true);
+        document.head.appendChild(script);
     };
-    const handleSubmitRoom = async (e)=>{
-        e.preventDefault();
-        setFormLoading(true);
-        try {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post(`/hostels/${selectedHostel.id}/rooms`, {
-                ...roomForm,
-                price_per_month: parseFloat(roomForm.price_per_month),
-                capacity: parseInt(roomForm.capacity),
-                available_count: parseInt(roomForm.available_count)
-            });
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Room added successfully!');
-            setShowRoomForm(false);
-            setRoomForm({
-                room_type: '',
-                price_per_month: '',
-                capacity: '',
-                available_count: '',
-                description: ''
-            });
-            fetchData();
-        } catch (e) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed to add room');
-        } finally{
-            setFormLoading(false);
-        }
-    };
-    const handleBookingAction = async (id, status)=>{
-        try {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/bookings/${id}/review`, {
-                status
-            });
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(`Booking ${status}`);
-            fetchData();
-        } catch (e) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Action failed');
-        }
-    };
-    const statusColor = (s)=>({
-            pending: {
-                background: '#fef9c3',
-                color: '#854d0e'
+    const initAutocomplete = ()=>{
+        if (!mapsLoaded || !addressInputRef.current || !window.google?.maps?.places) return;
+        if (autocompleteRef.current) return;
+        const ac = new window.google.maps.places.Autocomplete(addressInputRef.current, {
+            componentRestrictions: {
+                country: 'tz'
             },
-            confirmed: {
-                background: '#dcfce7',
-                color: '#166534'
-            },
-            cancelled: {
-                background: '#fee2e2',
-                color: '#991b1b'
-            },
-            approved: {
-                background: '#dcfce7',
-                color: '#166534'
-            },
-            rejected: {
-                background: '#fee2e2',
-                color: '#991b1b'
+            fields: [
+                'formatted_address',
+                'geometry',
+                'address_components'
+            ]
+        });
+        ac.addListener('place_changed', ()=>{
+            const place = ac.getPlace();
+            if (!place.geometry) return;
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            let city = '';
+            for (const comp of place.address_components || []){
+                if (comp.types.includes('locality') || comp.types.includes('administrative_area_level_2')) {
+                    city = comp.long_name;
+                    break;
+                }
             }
-        })[s] || {
-            background: '#f1f4f9',
-            color: '#475569'
-        };
-    if (loading) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
-            fontFamily: 'Inter,sans-serif',
-            color: '#94a3b8'
-        },
-        children: "Loading..."
-    }, void 0, false, {
+            autocompleteRef._lastLatLng = {
+                lat,
+                lng
+            };
+            setHostelForm((f)=>({
+                    ...f,
+                    address: place.formatted_address,
+                    latitude: lat.toFixed(6),
+                    longitude: lng.toFixed(6),
+                    city: city || f.city
+                }));
+        });
+        autocompleteRef.current = ac;
+    };
+    // Haversine distance in km between two lat/lng points
+    const haversine = (lat1, lng1, lat2, lng2)=>{
+        const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLng = (lng2 - lng1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+        return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(2);
+    };
+    // Known coordinates for Tanzania universities
+    const UNI_COORDS = {
+        'UDSM': [
+            -6.7702,
+            39.2135
+        ],
+        'CoET': [
+            -6.7702,
+            39.2135
+        ],
+        'MUHAS': [
+            -6.8022,
+            39.2092
+        ],
+        'DIT': [
+            -6.8196,
+            39.2803
+        ],
+        'IFM': [
+            -6.8009,
+            39.2796
+        ],
+        'ISW': [
+            -6.7867,
+            39.2574
+        ],
+        'ARU': [
+            -6.7737,
+            39.2215
+        ],
+        'OUT': [
+            -6.7851,
+            39.2183
+        ],
+        'UDOM': [
+            -6.1765,
+            35.7394
+        ],
+        'SUA': [
+            -6.8484,
+            37.6503
+        ],
+        'MU': [
+            -6.9048,
+            37.6710
+        ],
+        'NM-AIST': [
+            -3.3991,
+            36.9972
+        ],
+        'MoCU': [
+            -3.3464,
+            37.3445
+        ],
+        'SAUT': [
+            -2.4936,
+            32.9002
+        ],
+        'MUST': [
+            -8.9153,
+            33.4563
+        ],
+        'BUGANDO': [
+            -2.5180,
+            32.8964
+        ],
+        'TIA': [
+            -6.8012,
+            39.2728
+        ],
+        'RUCU': [
+            -7.7714,
+            35.7157
+        ],
+        'MUCE': [
+            -7.7714,
+            35.7157
+        ],
+        'ZU': [
+            -6.1638,
+            39.1915
+        ],
+        'SUZA': [
+            -6.1590,
+            39.1968
+        ],
+        'AKU': [
+            -6.7924,
+            39.2083
+        ],
+        'IMTU': [
+            -6.7712,
+            39.2498
+        ],
+        'MUM': [
+            -6.8290,
+            37.6534
+        ]
+    };
+    const autoCalcDistance = (uniShort)=>{
+        const llng = autocompleteRef._lastLatLng;
+        if (!llng) return;
+        const coords = UNI_COORDS[uniShort];
+        if (!coords) return;
+        const dist = haversine(llng.lat, llng.lng, coords[0], coords[1]);
+        setHostelForm((f)=>({
+                ...f,
+                distance_from_university: dist
+            }));
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(`Distance calculated: ${dist} km from ${uniShort}`);
+    };
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "HostDashboard.useEffect": ()=>{
+            loadGoogleMaps();
+        }
+    }["HostDashboard.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "HostDashboard.useEffect": ()=>{
+            if (mapsLoaded && (modal?.type === 'add_hostel' || modal?.type === 'edit_hostel')) {
+                setTimeout(initAutocomplete, 150);
+            }
+            if (!modal) {
+                autocompleteRef.current = null;
+            }
+        }
+    }["HostDashboard.useEffect"], [
+        mapsLoaded,
+        modal
+    ]);
+    const submitHostel = async ()=>{
+        if (!hostelForm.name || !hostelForm.city || !hostelForm.address) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Name, city and address required');
+            return;
+        }
+        setActionLoading(true);
+        try {
+            if (modal?.type === 'edit_hostel') {
+                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/host/hostels/${modal.item.id}`, hostelForm);
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Hostel updated');
+            } else {
+                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/host/hostels', hostelForm);
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Hostel submitted for admin review!');
+            }
+            fetchAll();
+            setModal(null);
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const submitRoom = async ()=>{
+        if (!roomForm.room_label || !roomForm.price_per_semester) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Room label and price required');
+            return;
+        }
+        setActionLoading(true);
+        try {
+            const hostelId = modal?.hostelId;
+            if (modal?.type === 'edit_room') {
+                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/host/rooms/${modal.item.id}`, roomForm);
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Room updated');
+            } else {
+                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post(`/host/hostels/${hostelId}/rooms`, roomForm);
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Room added!');
+            }
+            fetchAll();
+            setModal(null);
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const deleteRoom = async (roomId)=>{
+        setActionLoading(true);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].delete(`/host/rooms/${roomId}`);
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Room deleted');
+            fetchAll();
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const confirmBooking = async (id)=>{
+        setActionLoading(true);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/host/bookings/${id}/confirm`);
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Booking confirmed! Student notified.');
+            fetchAll();
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const rejectBooking = async (id)=>{
+        setActionLoading(true);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/host/bookings/${id}/reject`);
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Booking rejected');
+            fetchAll();
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const deleteAccount = async ()=>{
+        if (!deletePassword) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Enter password');
+            return;
+        }
+        setActionLoading(true);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].delete('/host/account', {
+                data: {
+                    password: deletePassword
+                }
+            });
+            logout();
+            router.push('/');
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(e.response?.data?.error || 'Failed');
+        } finally{
+            setActionLoading(false);
+        }
+    };
+    const openAddRoom = (hostelId)=>{
+        setRoomForm({
+            room_label: '',
+            room_type: 'Single Room',
+            floor: '',
+            capacity: 1,
+            price_per_semester: '',
+            available_count: 1,
+            description: '',
+            features: []
+        });
+        setModal({
+            type: 'add_room',
+            hostelId
+        });
+    };
+    const openEditRoom = (room)=>{
+        setRoomForm({
+            ...room
+        });
+        setModal({
+            type: 'edit_room',
+            item: room
+        });
+    };
+    const openAddHostel = ()=>{
+        setHostelForm({
+            name: '',
+            city: '',
+            address: '',
+            description: '',
+            university_id: '',
+            distance_from_university: '',
+            amenities: [],
+            transport_notes: '',
+            latitude: '',
+            longitude: ''
+        });
+        autocompleteRef._lastLatLng = null;
+        setModal({
+            type: 'add_hostel'
+        });
+    };
+    const openEditHostel = (h)=>{
+        setHostelForm({
+            name: h.name,
+            city: h.city,
+            address: h.address,
+            description: h.description || '',
+            university_id: h.university_id || '',
+            distance_from_university: h.distance_from_university || '',
+            amenities: h.amenities || [],
+            transport_notes: h.transport_notes || '',
+            latitude: h.latitude || '',
+            longitude: h.longitude || ''
+        });
+        if (h.latitude && h.longitude) {
+            autocompleteRef._lastLatLng = {
+                lat: parseFloat(h.latitude),
+                lng: parseFloat(h.longitude)
+            };
+        }
+        setModal({
+            type: 'edit_hostel',
+            item: h
+        });
+    };
+    const toggleAmenity = (a)=>setHostelForm((f)=>({
+                ...f,
+                amenities: f.amenities.includes(a) ? f.amenities.filter((x)=>x !== a) : [
+                    ...f.amenities,
+                    a
+                ]
+            }));
+    const pendingBookings = bookings.filter((b)=>b.status === 'pending');
+    const selectedHostel = hostels.find((h)=>h.id === subTab);
+    if (loading) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Loader, {}, void 0, false, {
         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-        lineNumber: 167,
-        columnNumber: 5
+        lineNumber: 231,
+        columnNumber: 23
     }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("link", {
-                href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+                href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
                 rel: "stylesheet"
             }, void 0, false, {
                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 174,
+                lineNumber: 235,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("link", {
+                href: "https://fonts.googleapis.com/icon?family=Material+Icons+Round",
+                rel: "stylesheet"
+            }, void 0, false, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 236,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("style", {
-                children: `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@700&display=swap');
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f8fafc;}
-        .layout{display:flex;min-height:100vh;}
-        .sidebar{width:240px;background:#0f172a;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;}
-        .sidebar-logo{font-family:'Merriweather',serif;font-size:18px;font-weight:700;color:white;display:flex;align-items:center;gap:10px;padding:0 20px 28px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:20px;}
-        .logo-mark{width:30px;height:30px;background:#1a56db;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:14px;font-weight:500;color:rgba(255,255,255,0.5);text-decoration:none;transition:all 0.15s;width:100%;border:none;background:none;font-family:'Inter',sans-serif;cursor:pointer;}
-        .nav-item:hover,.nav-item.active{color:white;background:rgba(255,255,255,0.07);}
-        .nav-item.active{border-right:2px solid #1a56db;}
-        .nav-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .sidebar-bottom{margin-top:auto;padding:0 20px;}
-        .user-box{background:rgba(255,255,255,0.06);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-        .user-avatar{width:34px;height:34px;background:#1a56db;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;}
-        .user-name{font-size:13px;font-weight:600;color:white;}
-        .user-role{font-size:11px;color:rgba(255,255,255,0.35);}
-        .btn-logout{width:100%;background:rgba(255,255,255,0.06);border:none;padding:10px;border-radius:8px;font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
-        .btn-logout:hover{color:#f87171;background:rgba(248,113,113,0.1);}
-        .main{flex:1;padding:36px;overflow-y:auto;}
-        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;}
-        .page-title{font-family:'Merriweather',serif;font-size:24px;font-weight:700;color:#0f172a;}
-        .page-sub{font-size:14px;color:#94a3b8;margin-top:4px;}
-        .btn-primary{background:#1a56db;color:white;border:none;padding:10px 20px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s;}
-        .btn-primary:hover{background:#1e429f;}
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
-        .stat-card{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:20px;}
-        .stat-label{font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
-        .stat-num{font-size:28px;font-weight:700;color:#0f172a;}
-        .stat-sub{font-size:12px;color:#94a3b8;margin-top:4px;}
-        .tabs{display:flex;gap:4px;background:#f1f4f9;border-radius:8px;padding:4px;margin-bottom:24px;width:fit-content;}
-        .tab{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:none;color:#94a3b8;transition:all 0.15s;}
-        .tab.active{background:white;color:#1a56db;box-shadow:0 1px 4px rgba(0,0,0,0.1);}
-        .table-wrap{background:white;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:28px;}
-        .table{width:100%;border-collapse:collapse;}
-        .table th{text-align:left;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;padding:14px 20px;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
-        .table td{padding:16px 20px;font-size:14px;color:#475569;border-bottom:1px solid #f1f4f9;}
-        .table tr:last-child td{border-bottom:none;}
-        .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
-        .action-btns{display:flex;gap:8px;}
-        .btn-sm{border:none;padding:5px 12px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
-        .btn-confirm{background:#dcfce7;color:#166534;}
-        .btn-reject{background:#fee2e2;color:#991b1b;}
-        .btn-add-room{background:#ebf2ff;color:#1e429f;}
-        .empty-cell{text-align:center;padding:48px;color:#94a3b8;font-size:14px;}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
-        .modal{background:white;border-radius:14px;padding:32px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;position:relative;}
-        .modal-title{font-family:'Merriweather',serif;font-size:20px;font-weight:700;color:#0f172a;margin-bottom:4px;}
-        .modal-sub{font-size:14px;color:#94a3b8;margin-bottom:24px;}
-        .form-group{margin-bottom:16px;}
-        .form-label{display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;}
-        .form-input,.form-select,.form-textarea{width:100%;border:1px solid #e2e8f0;border-radius:7px;padding:10px 14px;font-size:14px;font-family:'Inter',sans-serif;color:#0f172a;outline:none;transition:border 0.15s;background:white;}
-        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,219,0.1);}
-        .form-textarea{min-height:80px;resize:vertical;}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-        .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:16px;border-top:1px solid #e2e8f0;}
-        .btn-cancel{background:#f1f4f9;color:#475569;border:none;padding:10px 20px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
-        .btn-submit{background:#1a56db;color:white;border:none;padding:10px 24px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
-        .btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
-        .amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;}
-        .amenity-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;transition:all 0.15s;background:white;font-family:'Inter',sans-serif;}
-        .amenity-chip:hover{border-color:#1a56db;background:#ebf2ff;}
-        .amenity-chip.selected{border-color:#1a56db;background:#ebf2ff;}
-        .amenity-chip-icon{font-size:22px;color:#1a56db;}
-        .amenity-chip-label{font-size:11px;font-weight:500;color:#475569;text-align:center;}
-        .amenity-chip.selected .amenity-chip-label{color:#1e429f;}
-        .room-types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-        .room-type-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;transition:all 0.15s;background:white;font-family:'Inter',sans-serif;}
-        .room-type-card:hover{border-color:#1a56db;background:#ebf2ff;}
-        .room-type-card.selected{border-color:#1a56db;background:#ebf2ff;}
-        .room-type-icon{font-size:24px;}
-        .room-type-label{font-size:12px;font-weight:600;color:#0f172a;text-align:center;}
-        .room-type-desc{font-size:11px;color:#94a3b8;}
-        .image-upload{border:2px dashed #e2e8f0;border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;}
-        .image-upload:hover{border-color:#1a56db;background:#f8faff;}
-        .image-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;}
-        .image-preview{width:100%;height:160px;object-fit:cover;border-radius:8px;margin-top:12px;}
-        .upload-icon{font-size:32px;margin-bottom:8px;}
-        .upload-text{font-size:14px;color:#94a3b8;}
-        .upload-hint{font-size:12px;color:#c4cdd8;margin-top:4px;}
-        .section-divider{font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid #e2e8f0;}
-        .unis-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
-        .uni-chip{display:flex;align-items:center;gap:8px;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;transition:all 0.15s;background:white;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:#475569;}
-        .uni-chip:hover{border-color:#1a56db;}
-        .uni-chip.selected{border-color:#1a56db;background:#ebf2ff;color:#1e429f;}
-        .uni-check{width:16px;height:16px;border:2px solid #e2e8f0;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .uni-chip.selected .uni-check{background:#1a56db;border-color:#1a56db;}
-      `
+                children: CSS
             }, void 0, false, {
                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 175,
+                lineNumber: 237,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "layout",
                 children: [
+                    sideOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "overlay",
+                        onClick: ()=>setSideOpen(false)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 240,
+                        columnNumber: 22
+                    }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
-                        className: "sidebar",
+                        className: `sidebar ${sideOpen ? 'open' : ''}`,
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/",
-                                className: "sidebar-logo",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "sb-brand",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "logo-mark",
+                                        className: "sb-logo",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                            width: "16",
-                                            height: "16",
+                                            width: "15",
+                                            height: "15",
                                             viewBox: "0 0 24 24",
                                             fill: "none",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
                                                     d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z",
                                                     stroke: "white",
-                                                    strokeWidth: "2",
+                                                    strokeWidth: "2.5",
                                                     strokeLinecap: "round",
                                                     strokeLinejoin: "round"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 270,
+                                                    lineNumber: 246,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
                                                     d: "M9 22V12h6v10",
                                                     stroke: "white",
-                                                    strokeWidth: "2",
+                                                    strokeWidth: "2.5",
                                                     strokeLinecap: "round",
                                                     strokeLinejoin: "round"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 271,
+                                                    lineNumber: 247,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 269,
+                                            lineNumber: 245,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 268,
+                                        lineNumber: 244,
                                         columnNumber: 13
                                     }, this),
-                                    "DormLink"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 267,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/host/dashboard",
-                                className: "nav-item active",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "nav-icon",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                            width: "16",
-                                            height: "16",
-                                            viewBox: "0 0 24 24",
-                                            fill: "none",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
-                                                    x: "3",
-                                                    y: "3",
-                                                    width: "7",
-                                                    height: "7",
-                                                    rx: "1",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 279,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
-                                                    x: "14",
-                                                    y: "3",
-                                                    width: "7",
-                                                    height: "7",
-                                                    rx: "1",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 280,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
-                                                    x: "3",
-                                                    y: "14",
-                                                    width: "7",
-                                                    height: "7",
-                                                    rx: "1",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 281,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
-                                                    x: "14",
-                                                    y: "14",
-                                                    width: "7",
-                                                    height: "7",
-                                                    rx: "1",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 282,
-                                                    columnNumber: 17
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 278,
-                                            columnNumber: 15
-                                        }, this)
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "sb-name",
+                                        children: "DormLink"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 277,
-                                        columnNumber: 13
-                                    }, this),
-                                    "Dashboard"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 276,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/",
-                                className: "nav-item",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "nav-icon",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                            width: "16",
-                                            height: "16",
-                                            viewBox: "0 0 24 24",
-                                            fill: "none",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
-                                                    cx: "11",
-                                                    cy: "11",
-                                                    r: "8",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 290,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                    d: "M21 21l-4.35-4.35",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2",
-                                                    strokeLinecap: "round"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 291,
-                                                    columnNumber: 17
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 289,
-                                            columnNumber: 15
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 288,
-                                        columnNumber: 13
-                                    }, this),
-                                    "Browse Listings"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 287,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "sidebar-bottom",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "user-box",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "user-avatar",
-                                                children: [
-                                                    user?.first_name?.[0],
-                                                    user?.last_name?.[0]
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 298,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "user-name",
-                                                        children: [
-                                                            user?.first_name,
-                                                            " ",
-                                                            user?.last_name
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 300,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "user-role",
-                                                        children: "Host"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 301,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 299,
-                                                columnNumber: 15
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 297,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        className: "btn-logout",
-                                        onClick: logout,
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                width: "14",
-                                                height: "14",
-                                                viewBox: "0 0 24 24",
-                                                fill: "none",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                    d: "M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2",
-                                                    strokeLinecap: "round",
-                                                    strokeLinejoin: "round"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 306,
-                                                    columnNumber: 17
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 305,
-                                                columnNumber: 15
-                                            }, this),
-                                            "Sign Out"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 304,
+                                        lineNumber: 250,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 296,
+                                lineNumber: 243,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "sb-user",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "sb-av",
+                                        children: [
+                                            user?.first_name?.[0],
+                                            user?.last_name?.[0]
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 254,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "sb-fullname",
+                                                children: [
+                                                    user?.first_name,
+                                                    " ",
+                                                    user?.last_name
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 256,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "sb-tag",
+                                                children: "Host"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 257,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 255,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 253,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+                                className: "sb-nav",
+                                children: [
+                                    {
+                                        id: 'hostels',
+                                        icon: 'apartment',
+                                        label: 'My Properties'
+                                    },
+                                    {
+                                        id: 'bookings',
+                                        icon: 'receipt_long',
+                                        label: 'Bookings',
+                                        count: pendingBookings.length
+                                    },
+                                    {
+                                        id: 'account',
+                                        icon: 'manage_accounts',
+                                        label: 'Account'
+                                    }
+                                ].map((n)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: `sb-btn ${tab === n.id && !subTab ? 'active' : ''}`,
+                                        onClick: ()=>{
+                                            setTab(n.id);
+                                            setSubTab(null);
+                                            setSideOpen(false);
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "material-icons-round sb-icon",
+                                                children: n.icon
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 269,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: n.label
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 270,
+                                                columnNumber: 17
+                                            }, this),
+                                            n.count > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "sb-count",
+                                                children: n.count
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 271,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, n.id, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 267,
+                                        columnNumber: 15
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 261,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "sb-foot",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "sb-signout",
+                                    onClick: logout,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "material-icons-round",
+                                            style: {
+                                                fontSize: '15px'
+                                            },
+                                            children: "logout"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                            lineNumber: 278,
+                                            columnNumber: 15
+                                        }, this),
+                                        "Sign out"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 277,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 276,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                        lineNumber: 266,
+                        lineNumber: 242,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
                         className: "main",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "top-bar",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                className: "topbar",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "tb-left",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                                className: "page-title",
-                                                children: "Host Dashboard"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "hamburger",
+                                                onClick: ()=>setSideOpen(true),
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "material-icons-round",
+                                                    children: "menu"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                    lineNumber: 288,
+                                                    columnNumber: 17
+                                                }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 316,
+                                                lineNumber: 287,
                                                 columnNumber: 15
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "page-sub",
-                                                children: "Manage your properties and bookings"
-                                            }, void 0, false, {
+                                            subTab ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px'
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        className: "back-btn",
+                                                        onClick: ()=>setSubTab(null),
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "material-icons-round",
+                                                            style: {
+                                                                fontSize: '16px'
+                                                            },
+                                                            children: "arrow_back"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 293,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 292,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "tb-title",
+                                                        children: [
+                                                            selectedHostel?.name,
+                                                            " \\u2014 Rooms"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 295,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 317,
-                                                columnNumber: 15
+                                                lineNumber: 291,
+                                                columnNumber: 17
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "tb-title",
+                                                children: [
+                                                    tab === 'hostels' && 'My Properties',
+                                                    tab === 'bookings' && 'Bookings',
+                                                    tab === 'account' && 'Account'
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 298,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 315,
+                                        lineNumber: 286,
                                         columnNumber: 13
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        className: "btn-primary",
-                                        onClick: ()=>setShowHostelForm(true),
-                                        children: "+ Add New Property"
-                                    }, void 0, false, {
+                                    tab === 'hostels' && !subTab && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "tb-cta",
+                                        onClick: openAddHostel,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "material-icons-round",
+                                                style: {
+                                                    fontSize: '15px'
+                                                },
+                                                children: "add"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 307,
+                                                columnNumber: 17
+                                            }, this),
+                                            "Add Property"
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 319,
-                                        columnNumber: 13
+                                        lineNumber: 306,
+                                        columnNumber: 15
+                                    }, this),
+                                    subTab && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "tb-cta",
+                                        onClick: ()=>openAddRoom(subTab),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "material-icons-round",
+                                                style: {
+                                                    fontSize: '15px'
+                                                },
+                                                children: "add"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 313,
+                                                columnNumber: 17
+                                            }, this),
+                                            "Add Room"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 312,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 314,
+                                lineNumber: 285,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "stats-row",
+                                className: "content",
                                 children: [
-                                    {
-                                        label: 'Total Properties',
-                                        value: hostels.length,
-                                        sub: 'Listed'
-                                    },
-                                    {
-                                        label: 'Approved',
-                                        value: hostels.filter((h)=>h.status === 'approved').length,
-                                        sub: 'Live on platform'
-                                    },
-                                    {
-                                        label: 'Total Bookings',
-                                        value: bookings.length,
-                                        sub: 'All time'
-                                    },
-                                    {
-                                        label: 'Pending',
-                                        value: bookings.filter((b)=>b.status === 'pending').length,
-                                        sub: 'Need action'
-                                    }
-                                ].map((s, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "stat-card",
+                                    !subTab && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "stats",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "stat-label",
-                                                children: s.label
-                                            }, void 0, false, {
+                                            {
+                                                n: hostels.length,
+                                                l: 'Properties',
+                                                icon: 'apartment'
+                                            },
+                                            {
+                                                n: hostels.filter((h)=>h.status === 'approved').length,
+                                                l: 'Live',
+                                                icon: 'check_circle',
+                                                good: true
+                                            },
+                                            {
+                                                n: bookings.length,
+                                                l: 'Bookings',
+                                                icon: 'receipt_long'
+                                            },
+                                            {
+                                                n: pendingBookings.length,
+                                                l: 'Need Review',
+                                                icon: 'schedule',
+                                                warn: pendingBookings.length > 0
+                                            }
+                                        ].map((s, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: `stat ${s.good && s.n > 0 ? 'good' : s.warn && s.n > 0 ? 'warn' : ''}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "material-icons-round stat-icon",
+                                                        children: s.icon
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 330,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "stat-n",
+                                                        children: s.n
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 331,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "stat-l",
+                                                        children: s.l
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 332,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, i, true, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 332,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "stat-num",
-                                                children: s.value
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 333,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "stat-sub",
-                                                children: s.sub
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 334,
-                                                columnNumber: 17
-                                            }, this)
-                                        ]
-                                    }, i, true, {
+                                                lineNumber: 329,
+                                                columnNumber: 19
+                                            }, this))
+                                    }, void 0, false, {
                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 331,
+                                        lineNumber: 322,
                                         columnNumber: 15
-                                    }, this))
-                            }, void 0, false, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 324,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "tabs",
-                                children: [
-                                    'properties',
-                                    'bookings',
-                                    'payments'
-                                ].map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        className: `tab ${activeTab === t ? 'active' : ''}`,
-                                        onClick: ()=>setActiveTab(t),
+                                    }, this),
+                                    tab === 'hostels' && !subTab && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "panel",
                                         children: [
-                                            t.charAt(0).toUpperCase() + t.slice(1),
-                                            t === 'payments' && bookings.filter((b)=>b.payment_status === 'pending_confirmation').length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                style: {
-                                                    background: '#ef4444',
-                                                    color: 'white',
-                                                    borderRadius: '10px',
-                                                    padding: '1px 7px',
-                                                    fontSize: '11px',
-                                                    marginLeft: '6px',
-                                                    fontWeight: 700
-                                                },
-                                                children: bookings.filter((b)=>b.payment_status === 'pending_confirmation').length
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 344,
-                                                columnNumber: 9
-                                            }, this)
-                                        ]
-                                    }, t, true, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 341,
-                                        columnNumber: 5
-                                    }, this))
-                            }, void 0, false, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 339,
-                                columnNumber: 11
-                            }, this),
-                            activeTab === 'properties' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "table-wrap",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                    className: "table",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "panel-hd",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Property"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "panel-title",
+                                                        children: "Properties"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 23
+                                                        lineNumber: 342,
+                                                        columnNumber: 19
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "City"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "panel-sub",
+                                                        children: [
+                                                            hostels.length,
+                                                            " total"
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 40
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "University"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 53
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Rooms"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 72
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Status"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 86
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Action"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 356,
-                                                        columnNumber: 101
+                                                        lineNumber: 343,
+                                                        columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 356,
-                                                columnNumber: 19
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 355,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                            children: dataLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                    colSpan: "6",
-                                                    className: "empty-cell",
-                                                    children: "Loading..."
-                                                }, void 0, false, {
+                                                lineNumber: 341,
+                                                columnNumber: 17
+                                            }, this),
+                                            dataLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "empty",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Spinner, {}, void 0, false, {
                                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 360,
-                                                    columnNumber: 25
+                                                    lineNumber: 345,
+                                                    columnNumber: 55
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 360,
-                                                columnNumber: 21
-                                            }, this) : hostels.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                    colSpan: "6",
-                                                    className: "empty-cell",
-                                                    children: "No properties yet. Click Add New Property above."
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 362,
-                                                    columnNumber: 25
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 362,
-                                                columnNumber: 21
-                                            }, this) : hostels.map((h)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            style: {
-                                                                fontWeight: 600,
-                                                                color: '#0f172a'
-                                                            },
-                                                            children: h.name
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 365,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: h.city
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 366,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: h.universities?.name || '—'
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 367,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: [
-                                                                h.rooms?.length || 0,
-                                                                " rooms"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 368,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "badge",
-                                                                style: statusColor(h.status),
-                                                                children: h.status
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                lineNumber: 369,
-                                                                columnNumber: 27
-                                                            }, this)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 369,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                className: "btn-sm btn-add-room",
-                                                                onClick: ()=>{
-                                                                    setSelectedHostel(h);
-                                                                    setShowRoomForm(true);
-                                                                },
-                                                                children: "+ Add Room"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                lineNumber: 371,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 370,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    ]
-                                                }, h.id, true, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 364,
-                                                    columnNumber: 21
-                                                }, this))
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 358,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 354,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 353,
-                                columnNumber: 13
-                            }, this),
-                            activeTab === 'bookings' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "table-wrap",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                    className: "table",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                lineNumber: 345,
+                                                columnNumber: 32
+                                            }, this) : hostels.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "empty",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Student"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "material-icons-round",
+                                                        style: {
+                                                            fontSize: '40px',
+                                                            color: '#cbd5e1',
+                                                            display: 'block',
+                                                            marginBottom: '12px'
+                                                        },
+                                                        children: "apartment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 23
+                                                        lineNumber: 348,
+                                                        columnNumber: 21
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Property"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            fontWeight: '500',
+                                                            color: '#475569',
+                                                            marginBottom: '4px'
+                                                        },
+                                                        children: "No properties yet"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 39
+                                                        lineNumber: 349,
+                                                        columnNumber: 21
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Room"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            fontSize: '13px',
+                                                            color: '#94a3b8',
+                                                            marginBottom: '16px'
+                                                        },
+                                                        children: "Add your first hostel to start receiving bookings"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 56
+                                                        lineNumber: 350,
+                                                        columnNumber: 21
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Check In"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        className: "btn-primary",
+                                                        onClick: openAddHostel,
+                                                        children: "Add Property"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 69
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Amount"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 86
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Status"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 101
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                        children: "Action"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 116
+                                                        lineNumber: 351,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 386,
+                                                lineNumber: 347,
                                                 columnNumber: 19
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 385,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                            children: bookings.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                    colSpan: "7",
-                                                    className: "empty-cell",
-                                                    children: "No booking requests yet"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 390,
-                                                    columnNumber: 25
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 390,
-                                                columnNumber: 21
-                                            }, this) : bookings.map((b)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            style: {
-                                                                fontWeight: 600,
-                                                                color: '#0f172a'
-                                                            },
-                                                            children: [
-                                                                b.users?.first_name,
-                                                                " ",
-                                                                b.users?.last_name
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 393,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: b.hostels?.name
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 394,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: b.rooms?.room_type
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 395,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: b.check_in_date
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 396,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            style: {
-                                                                fontWeight: 600
-                                                            },
-                                                            children: [
-                                                                "TZS ",
-                                                                parseFloat(b.total_amount).toLocaleString()
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 397,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "badge",
-                                                                style: statusColor(b.status),
-                                                                children: b.status
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                lineNumber: 398,
-                                                                columnNumber: 27
-                                                            }, this)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 398,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                            children: b.status === 'pending' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "action-btns",
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "hostel-list",
+                                                children: hostels.map((h)=>{
+                                                    const st = SB[h.status] || SB.pending;
+                                                    const totalRooms = h.rooms?.length || 0;
+                                                    const availRooms = h.rooms?.filter((r)=>!r.is_full).length || 0;
+                                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "hostel-row",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "hostel-row-left",
                                                                 children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                        className: "btn-sm btn-confirm",
-                                                                        onClick: ()=>handleBookingAction(b.id, 'confirmed'),
-                                                                        children: "Confirm"
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "hostel-icon",
+                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "material-icons-round",
+                                                                            style: {
+                                                                                fontSize: '20px',
+                                                                                color: '#64748b'
+                                                                            },
+                                                                            children: "apartment"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 363,
+                                                                            columnNumber: 31
+                                                                        }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                        lineNumber: 402,
+                                                                        lineNumber: 362,
                                                                         columnNumber: 29
                                                                     }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                        className: "btn-sm btn-reject",
-                                                                        onClick: ()=>handleBookingAction(b.id, 'cancelled'),
-                                                                        children: "Reject"
-                                                                    }, void 0, false, {
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "hostel-name",
+                                                                                children: h.name
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 366,
+                                                                                columnNumber: 31
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "hostel-meta",
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        children: [
+                                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                                className: "material-icons-round",
+                                                                                                style: {
+                                                                                                    fontSize: '12px',
+                                                                                                    verticalAlign: 'middle'
+                                                                                                },
+                                                                                                children: "place"
+                                                                                            }, void 0, false, {
+                                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                                lineNumber: 368,
+                                                                                                columnNumber: 39
+                                                                                            }, this),
+                                                                                            " ",
+                                                                                            h.city
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 368,
+                                                                                        columnNumber: 33
+                                                                                    }, this),
+                                                                                    h.universities?.name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        children: [
+                                                                                            "\\u00b7 ",
+                                                                                            h.universities.name
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 369,
+                                                                                        columnNumber: 58
+                                                                                    }, this),
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        children: [
+                                                                                            "\\u00b7 ",
+                                                                                            totalRooms,
+                                                                                            " rooms"
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 370,
+                                                                                        columnNumber: 33
+                                                                                    }, this),
+                                                                                    totalRooms > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        style: {
+                                                                                            color: availRooms === 0 ? '#ef4444' : '#10b981'
+                                                                                        },
+                                                                                        children: [
+                                                                                            "\\u00b7 ",
+                                                                                            availRooms,
+                                                                                            " available"
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 371,
+                                                                                        columnNumber: 52
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 367,
+                                                                                columnNumber: 31
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
                                                                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                        lineNumber: 403,
+                                                                        lineNumber: 365,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                                lineNumber: 401,
+                                                                lineNumber: 361,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "hostel-row-right",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "badge",
+                                                                        style: {
+                                                                            background: st.bg,
+                                                                            color: st.color
+                                                                        },
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                style: {
+                                                                                    width: '5px',
+                                                                                    height: '5px',
+                                                                                    borderRadius: '50%',
+                                                                                    background: st.dot,
+                                                                                    display: 'inline-block',
+                                                                                    marginRight: '5px'
+                                                                                }
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 377,
+                                                                                columnNumber: 31
+                                                                            }, this),
+                                                                            st.label
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 376,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "act-row",
+                                                                        children: [
+                                                                            h.status === 'approved' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "act-btn blue",
+                                                                                onClick: ()=>setSubTab(h.id),
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        className: "material-icons-round",
+                                                                                        style: {
+                                                                                            fontSize: '13px'
+                                                                                        },
+                                                                                        children: "bed"
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 383,
+                                                                                        columnNumber: 35
+                                                                                    }, this),
+                                                                                    "Rooms"
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 382,
+                                                                                columnNumber: 33
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "act-btn gray",
+                                                                                onClick: ()=>openEditHostel(h),
+                                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "material-icons-round",
+                                                                                    style: {
+                                                                                        fontSize: '13px'
+                                                                                    },
+                                                                                    children: "edit"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 388,
+                                                                                    columnNumber: 33
+                                                                                }, this)
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 387,
+                                                                                columnNumber: 31
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 380,
+                                                                        columnNumber: 29
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 375,
                                                                 columnNumber: 27
                                                             }, this)
+                                                        ]
+                                                    }, h.id, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 360,
+                                                        columnNumber: 25
+                                                    }, this);
+                                                })
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 354,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 340,
+                                        columnNumber: 15
+                                    }, this),
+                                    tab === 'hostels' && subTab && selectedHostel && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "hostel-summary-bar",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    fontWeight: '600',
+                                                                    color: '#0f172a'
+                                                                },
+                                                                children: selectedHostel.name
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 405,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    fontSize: '12px',
+                                                                    color: '#94a3b8',
+                                                                    marginTop: '2px'
+                                                                },
+                                                                children: [
+                                                                    selectedHostel.address,
+                                                                    " \\u00b7 ",
+                                                                    selectedHostel.city
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 406,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 404,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            display: 'flex',
+                                                            gap: '16px',
+                                                            fontSize: '13px'
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                        children: selectedHostel.rooms?.length || 0
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 409,
+                                                                        columnNumber: 26
+                                                                    }, this),
+                                                                    " ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        style: {
+                                                                            color: '#94a3b8'
+                                                                        },
+                                                                        children: "rooms"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 409,
+                                                                        columnNumber: 79
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 409,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                        style: {
+                                                                            color: '#10b981'
+                                                                        },
+                                                                        children: selectedHostel.rooms?.filter((r)=>!r.is_full).length || 0
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 410,
+                                                                        columnNumber: 26
+                                                                    }, this),
+                                                                    " ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        style: {
+                                                                            color: '#94a3b8'
+                                                                        },
+                                                                        children: "available"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 410,
+                                                                        columnNumber: 127
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 410,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 408,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 403,
+                                                columnNumber: 17
+                                            }, this),
+                                            !selectedHostel.rooms?.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "panel",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "empty",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "material-icons-round",
+                                                            style: {
+                                                                fontSize: '40px',
+                                                                color: '#cbd5e1',
+                                                                display: 'block',
+                                                                marginBottom: '12px'
+                                                            },
+                                                            children: "bed"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 399,
+                                                            lineNumber: 417,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            style: {
+                                                                fontWeight: '500',
+                                                                color: '#475569',
+                                                                marginBottom: '4px'
+                                                            },
+                                                            children: "No rooms added yet"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 418,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            style: {
+                                                                fontSize: '13px',
+                                                                color: '#94a3b8',
+                                                                marginBottom: '16px'
+                                                            },
+                                                            children: 'Add rooms one by one with labels like "A101", "B205"'
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 419,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "btn-primary",
+                                                            onClick: ()=>openAddRoom(subTab),
+                                                            children: "Add First Room"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 420,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
-                                                }, b.id, true, {
+                                                }, void 0, true, {
                                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 392,
+                                                    lineNumber: 416,
                                                     columnNumber: 21
-                                                }, this))
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 388,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 384,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 415,
+                                                columnNumber: 19
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rooms-grid",
+                                                children: [
+                                                    selectedHostel.rooms.map((room)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: `room-tile ${room.is_full ? 'full' : ''}`,
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-head",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "room-label-badge",
+                                                                            children: room.room_label || 'Room'
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 428,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        room.is_full ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "room-status-badge full",
+                                                                            children: "Full"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 430,
+                                                                            columnNumber: 29
+                                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "room-status-badge avail",
+                                                                            children: [
+                                                                                room.available_count,
+                                                                                " left"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 432,
+                                                                            columnNumber: 29
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 427,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-type",
+                                                                    children: room.room_type
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 435,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                room.floor && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-meta",
+                                                                    children: [
+                                                                        "Floor ",
+                                                                        room.floor
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 436,
+                                                                    columnNumber: 40
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-info",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "room-info-item",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "material-icons-round",
+                                                                                    style: {
+                                                                                        fontSize: '14px',
+                                                                                        color: '#94a3b8'
+                                                                                    },
+                                                                                    children: "people"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 439,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                room.capacity,
+                                                                                " person",
+                                                                                room.capacity > 1 ? 's' : ''
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 438,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "room-info-item",
+                                                                            style: {
+                                                                                color: '#1d4ed8',
+                                                                                fontWeight: '600'
+                                                                            },
+                                                                            children: [
+                                                                                "TZS ",
+                                                                                parseFloat(room.price_per_semester || 0).toLocaleString(),
+                                                                                "/sem"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 442,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 437,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                room.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-desc",
+                                                                    children: room.description
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 446,
+                                                                    columnNumber: 46
+                                                                }, this),
+                                                                room.features?.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-features",
+                                                                    children: room.features.slice(0, 3).map((f, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "room-feat-chip",
+                                                                            children: f
+                                                                        }, i, false, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 449,
+                                                                            columnNumber: 68
+                                                                        }, this))
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 448,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "room-tile-actions",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            className: "act-btn gray",
+                                                                            style: {
+                                                                                flex: 1,
+                                                                                justifyContent: 'center'
+                                                                            },
+                                                                            onClick: ()=>openEditRoom(room),
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "material-icons-round",
+                                                                                    style: {
+                                                                                        fontSize: '13px'
+                                                                                    },
+                                                                                    children: "edit"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 454,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                "Edit"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 453,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            className: "act-btn red",
+                                                                            onClick: ()=>{
+                                                                                if (confirm('Delete this room?')) deleteRoom(room.id);
+                                                                            },
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "material-icons-round",
+                                                                                style: {
+                                                                                    fontSize: '13px'
+                                                                                },
+                                                                                children: "delete"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 458,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 457,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 452,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, room.id, true, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 426,
+                                                            columnNumber: 23
+                                                        }, this)),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "room-tile add-room-tile",
+                                                        onClick: ()=>openAddRoom(subTab),
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "material-icons-round",
+                                                                style: {
+                                                                    fontSize: '28px',
+                                                                    color: '#cbd5e1',
+                                                                    marginBottom: '8px'
+                                                                },
+                                                                children: "add_circle_outline"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 464,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    fontSize: '13px',
+                                                                    color: '#94a3b8',
+                                                                    fontWeight: '500'
+                                                                },
+                                                                children: "Add Room"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 465,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 463,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 424,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 402,
+                                        columnNumber: 15
+                                    }, this),
+                                    tab === 'bookings' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "panel",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "panel-hd",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "panel-title",
+                                                        children: "Bookings"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 476,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "panel-sub",
+                                                        children: [
+                                                            pendingBookings.length,
+                                                            " pending review"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 477,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 475,
+                                                columnNumber: 17
+                                            }, this),
+                                            bookings.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "empty",
+                                                children: "No bookings yet"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 480,
+                                                columnNumber: 19
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "tbl-wrap",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                                                            className: "tbl",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Student"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 31
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Property"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 47
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Room"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 64
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Semester"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 77
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Deposit"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 94
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Status"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 110
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Payment"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 125
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                                children: "Action"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 486,
+                                                                                columnNumber: 141
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 486,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 485,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                                                    children: bookings.map((b)=>{
+                                                                        const bs = SB[b.status] || SB.pending;
+                                                                        const ps = SB[b.payment_status] || SB.unpaid;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                                            className: b.status === 'pending' ? 'highlight' : '',
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                            className: "cell-main",
+                                                                                            children: [
+                                                                                                b.users?.first_name,
+                                                                                                " ",
+                                                                                                b.users?.last_name
+                                                                                            ]
+                                                                                        }, void 0, true, {
+                                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                            lineNumber: 495,
+                                                                                            columnNumber: 35
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                            className: "cell-sub",
+                                                                                            children: b.users?.phone
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                            lineNumber: 496,
+                                                                                            columnNumber: 35
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 494,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    className: "cell-main",
+                                                                                    children: b.hostels?.name
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 498,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                            className: "cell-main",
+                                                                                            children: b.rooms?.room_label
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                            lineNumber: 500,
+                                                                                            columnNumber: 35
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                            className: "cell-sub",
+                                                                                            children: b.rooms?.room_type
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                            lineNumber: 501,
+                                                                                            columnNumber: 35
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 499,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    className: "cell-sub",
+                                                                                    children: b.semester
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 503,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    style: {
+                                                                                        color: '#1d4ed8',
+                                                                                        fontWeight: '600',
+                                                                                        fontSize: '13px'
+                                                                                    },
+                                                                                    children: [
+                                                                                        "TZS ",
+                                                                                        parseFloat(b.deposit_amount || 0).toLocaleString()
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 504,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                                                        s: bs
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 505,
+                                                                                        columnNumber: 37
+                                                                                    }, this)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 505,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                                                        s: ps
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 506,
+                                                                                        columnNumber: 37
+                                                                                    }, this)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 506,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                        className: "act-row",
+                                                                                        children: b.status === 'pending' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                                                            children: [
+                                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                                    className: "act-btn green",
+                                                                                                    onClick: ()=>confirmBooking(b.id),
+                                                                                                    disabled: actionLoading,
+                                                                                                    children: "Confirm"
+                                                                                                }, void 0, false, {
+                                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                                    lineNumber: 510,
+                                                                                                    columnNumber: 39
+                                                                                                }, this),
+                                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                                    className: "act-btn red",
+                                                                                                    onClick: ()=>rejectBooking(b.id),
+                                                                                                    disabled: actionLoading,
+                                                                                                    children: "Reject"
+                                                                                                }, void 0, false, {
+                                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                                    lineNumber: 511,
+                                                                                                    columnNumber: 39
+                                                                                                }, this)
+                                                                                            ]
+                                                                                        }, void 0, true)
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 508,
+                                                                                        columnNumber: 35
+                                                                                    }, this)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                    lineNumber: 507,
+                                                                                    columnNumber: 33
+                                                                                }, this)
+                                                                            ]
+                                                                        }, b.id, true, {
+                                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                            lineNumber: 493,
+                                                                            columnNumber: 31
+                                                                        }, this);
+                                                                    })
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                    lineNumber: 488,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                            lineNumber: 484,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 483,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "mobile-cards",
+                                                        children: bookings.map((b)=>{
+                                                            const bs = SB[b.status] || SB.pending;
+                                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "m-card",
+                                                                style: {
+                                                                    background: b.status === 'pending' ? '#fffbeb' : 'white'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "m-card-top",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                        className: "m-hostel",
+                                                                                        children: [
+                                                                                            b.users?.first_name,
+                                                                                            " ",
+                                                                                            b.users?.last_name
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 529,
+                                                                                        columnNumber: 33
+                                                                                    }, this),
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                        className: "m-room",
+                                                                                        children: [
+                                                                                            b.hostels?.name,
+                                                                                            " \\u00b7 ",
+                                                                                            b.rooms?.room_label,
+                                                                                            " \\u00b7 ",
+                                                                                            b.semester
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                        lineNumber: 530,
+                                                                                        columnNumber: 33
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 528,
+                                                                                columnNumber: 31
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                                                s: bs
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 532,
+                                                                                columnNumber: 31
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 527,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: '600',
+                                                                            color: '#1d4ed8',
+                                                                            margin: '8px 0'
+                                                                        },
+                                                                        children: [
+                                                                            "Deposit: TZS ",
+                                                                            parseFloat(b.deposit_amount || 0).toLocaleString()
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 534,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    b.status === 'pending' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "m-actions",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "act-btn green",
+                                                                                style: {
+                                                                                    flex: 1,
+                                                                                    justifyContent: 'center'
+                                                                                },
+                                                                                onClick: ()=>confirmBooking(b.id),
+                                                                                children: "Confirm"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 539,
+                                                                                columnNumber: 33
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "act-btn red",
+                                                                                style: {
+                                                                                    flex: 1,
+                                                                                    justifyContent: 'center'
+                                                                                },
+                                                                                onClick: ()=>rejectBooking(b.id),
+                                                                                children: "Reject"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 540,
+                                                                                columnNumber: 33
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 538,
+                                                                        columnNumber: 31
+                                                                    }, this)
+                                                                ]
+                                                            }, b.id, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 526,
+                                                                columnNumber: 27
+                                                            }, this);
+                                                        })
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 522,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 474,
+                                        columnNumber: 15
+                                    }, this),
+                                    tab === 'account' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "panel",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "panel-hd",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "panel-title",
+                                                    children: "Account Settings"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                    lineNumber: 555,
+                                                    columnNumber: 43
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 555,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    padding: '20px'
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "acct-section",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "acct-section-title",
+                                                                children: "Profile"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 558,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "acct-info-row",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "sb-av",
+                                                                        style: {
+                                                                            width: '44px',
+                                                                            height: '44px',
+                                                                            fontSize: '16px'
+                                                                        },
+                                                                        children: [
+                                                                            user?.first_name?.[0],
+                                                                            user?.last_name?.[0]
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 560,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                style: {
+                                                                                    fontWeight: '600',
+                                                                                    color: '#0f172a'
+                                                                                },
+                                                                                children: [
+                                                                                    user?.first_name,
+                                                                                    " ",
+                                                                                    user?.last_name
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 562,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                style: {
+                                                                                    fontSize: '13px',
+                                                                                    color: '#94a3b8'
+                                                                                },
+                                                                                children: user?.email
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 563,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                style: {
+                                                                                    fontSize: '12px',
+                                                                                    color: '#94a3b8'
+                                                                                },
+                                                                                children: user?.phone || 'No phone'
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                                lineNumber: 564,
+                                                                                columnNumber: 25
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 561,
+                                                                        columnNumber: 23
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 559,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 557,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "acct-section danger-zone",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "acct-section-title",
+                                                                style: {
+                                                                    color: '#ef4444'
+                                                                },
+                                                                children: "Danger Zone"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 569,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: {
+                                                                    fontSize: '13px',
+                                                                    color: '#64748b',
+                                                                    marginBottom: '14px',
+                                                                    lineHeight: '1.6'
+                                                                },
+                                                                children: "Permanently delete your host account and all properties."
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 570,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                className: "btn-danger-outline",
+                                                                onClick: ()=>setModal({
+                                                                        type: 'delete_account'
+                                                                    }),
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "material-icons-round",
+                                                                        style: {
+                                                                            fontSize: '15px'
+                                                                        },
+                                                                        children: "delete_forever"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                        lineNumber: 574,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    "Delete My Account"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                                lineNumber: 573,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                        lineNumber: 568,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                lineNumber: 556,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                        lineNumber: 554,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 383,
-                                columnNumber: 13
+                                lineNumber: 319,
+                                columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                        lineNumber: 313,
+                        lineNumber: 284,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 265,
+                lineNumber: 239,
                 columnNumber: 7
             }, this),
-            activeTab === 'payments' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "table-wrap",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                    className: "table",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Student"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 421,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Property"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 422,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Room"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 423,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Semester"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 424,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Deposit Amount"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 425,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Method"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 426,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Transaction ID"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 427,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        children: "Action"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                        lineNumber: 428,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 420,
-                                columnNumber: 9
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 419,
-                            columnNumber: 7
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                            children: bookings.filter((b)=>b.payment_status === 'pending_confirmation').length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                    colSpan: "8",
-                                    className: "empty-cell",
-                                    children: "No pending payment confirmations"
+            (modal?.type === 'add_hostel' || modal?.type === 'edit_hostel') && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(BigModal, {
+                title: modal.type === 'edit_hostel' ? 'Edit Property' : 'Add New Property',
+                onClose: ()=>setModal(null),
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "form-grid2",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Property Name *",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    placeholder: "e.g. Sunrise Hostel",
+                                    value: hostelForm.name,
+                                    onChange: (e)=>setHostelForm((f)=>({
+                                                ...f,
+                                                name: e.target.value
+                                            }))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 433,
+                                    lineNumber: 590,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                lineNumber: 433,
-                                columnNumber: 11
-                            }, this) : bookings.filter((b)=>b.payment_status === 'pending_confirmation').map((b)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            style: {
-                                                fontWeight: 600,
-                                                color: '#0f172a'
-                                            },
-                                            children: [
-                                                b.users?.first_name,
-                                                " ",
-                                                b.users?.last_name
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 436,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            children: b.hostels?.name
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 437,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            children: b.rooms?.room_type
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 438,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            children: b.semester
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 439,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            style: {
-                                                fontWeight: 600,
-                                                color: '#1a56db'
-                                            },
-                                            children: [
-                                                "TZS ",
-                                                parseFloat(b.deposit_amount || 0).toLocaleString()
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 440,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            style: {
-                                                textTransform: 'capitalize'
-                                            },
-                                            children: b.payment_method
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 441,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            style: {
-                                                fontFamily: 'monospace',
-                                                fontSize: '13px'
-                                            },
-                                            children: b.transaction_id
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 442,
-                                            columnNumber: 13
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "action-btns",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: "btn-sm btn-confirm",
-                                                        onClick: async ()=>{
-                                                            try {
-                                                                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/payments/confirm/${b.id}`);
-                                                                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Payment confirmed!');
-                                                                fetchData();
-                                                            } catch (e) {
-                                                                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Failed');
-                                                            }
-                                                        },
-                                                        children: "✓ Confirm"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 445,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: "btn-sm btn-reject",
-                                                        onClick: async ()=>{
-                                                            try {
-                                                                await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$lib$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/payments/reject/${b.id}`, {
-                                                                    reason: 'Transaction not found'
-                                                                });
-                                                                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success('Payment rejected');
-                                                                fetchData();
-                                                            } catch (e) {
-                                                                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error('Failed');
-                                                            }
-                                                        },
-                                                        children: "✗ Reject"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 457,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                lineNumber: 444,
-                                                columnNumber: 15
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 443,
-                                            columnNumber: 13
-                                        }, this)
-                                    ]
-                                }, b.id, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 435,
-                                    columnNumber: 11
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 431,
-                            columnNumber: 7
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                    lineNumber: 418,
-                    columnNumber: 5
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 417,
-                columnNumber: 3
-            }, this),
-            showHostelForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "modal-overlay",
-                onClick: ()=>setShowHostelForm(false),
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "modal",
-                    onClick: (e)=>e.stopPropagation(),
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "modal-title",
-                            children: "Add New Property"
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 482,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "modal-sub",
-                            children: "Fill in your property details. It will be reviewed by admin before going live."
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 483,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                            onSubmit: handleSubmitHostel,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
-                                    children: "Basic Information"
+                                lineNumber: 589,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "City *",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    placeholder: "e.g. Dar es Salaam",
+                                    value: hostelForm.city,
+                                    onChange: (e)=>setHostelForm((f)=>({
+                                                ...f,
+                                                city: e.target.value
+                                            }))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 486,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-group",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            className: "form-label",
-                                            children: "Property Name"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 488,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            className: "form-input",
-                                            placeholder: "e.g. Sunrise Hostel",
-                                            value: hostelForm.name,
-                                            onChange: (e)=>setHostelForm({
-                                                    ...hostelForm,
-                                                    name: e.target.value
-                                                }),
-                                            required: true
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 489,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 487,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-row",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "form-group",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "form-label",
-                                                    children: "City"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 493,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    className: "form-input",
-                                                    placeholder: "Dar es Salaam",
-                                                    value: hostelForm.city,
-                                                    onChange: (e)=>setHostelForm({
-                                                            ...hostelForm,
-                                                            city: e.target.value
-                                                        }),
-                                                    required: true
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 494,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 492,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "form-group",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "form-label",
-                                                    children: "Distance from University (km)"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 497,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    className: "form-input",
-                                                    type: "number",
-                                                    step: "0.1",
-                                                    placeholder: "0.5",
-                                                    value: hostelForm.distance_from_university,
-                                                    onChange: (e)=>setHostelForm({
-                                                            ...hostelForm,
-                                                            distance_from_university: e.target.value
-                                                        })
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 498,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 496,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 491,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-group",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            className: "form-label",
-                                            children: "Full Address"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 502,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            className: "form-input",
-                                            placeholder: "Street, Area",
-                                            value: hostelForm.address,
-                                            onChange: (e)=>setHostelForm({
-                                                    ...hostelForm,
-                                                    address: e.target.value
-                                                }),
-                                            required: true
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 503,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 501,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-group",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            className: "form-label",
-                                            children: "Description"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 506,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                            className: "form-textarea",
-                                            placeholder: "Describe your property...",
-                                            value: hostelForm.description,
-                                            onChange: (e)=>setHostelForm({
-                                                    ...hostelForm,
-                                                    description: e.target.value
-                                                })
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 507,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 505,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
-                                    children: "Nearby Universities"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 510,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    style: {
-                                        fontSize: '13px',
-                                        color: '#94a3b8',
-                                        marginBottom: '10px'
-                                    },
-                                    children: "Select all universities that are near your hostel"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 511,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "unis-grid",
-                                    children: universities.map((u)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: `uni-chip ${selectedUniversities.includes(u.id) ? 'selected' : ''}`,
-                                            onClick: ()=>{
-                                                toggleUniversity(u.id);
-                                                if (!hostelForm.university_id) setHostelForm({
-                                                    ...hostelForm,
-                                                    university_id: u.id
-                                                });
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "uni-check",
-                                                    children: selectedUniversities.includes(u.id) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                        width: "10",
-                                                        height: "10",
-                                                        viewBox: "0 0 24 24",
-                                                        fill: "none",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                            d: "M20 6L9 17l-5-5",
-                                                            stroke: "white",
-                                                            strokeWidth: "3",
-                                                            strokeLinecap: "round",
-                                                            strokeLinejoin: "round"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                            lineNumber: 525,
-                                                            columnNumber: 27
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                        lineNumber: 524,
-                                                        columnNumber: 25
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 522,
-                                                    columnNumber: 21
-                                                }, this),
-                                                u.short_name || u.name
-                                            ]
-                                        }, u.id, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 514,
-                                            columnNumber: 19
-                                        }, this))
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 512,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
-                                    style: {
-                                        marginTop: '20px'
-                                    },
-                                    children: "Amenities"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 534,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    style: {
-                                        fontSize: '13px',
-                                        color: '#94a3b8',
-                                        marginBottom: '10px'
-                                    },
-                                    children: "Select all amenities available in your property"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 535,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "amenities-grid",
-                                    children: Object.entries(AMENITY_ICONS).map(([name, icon])=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: `amenity-chip ${selectedAmenities.includes(name) ? 'selected' : ''}`,
-                                            onClick: ()=>toggleAmenity(name),
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "material-icons amenity-chip-icon",
-                                                    children: icon
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 543,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "amenity-chip-label",
-                                                    children: name
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 544,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, name, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 538,
-                                            columnNumber: 19
-                                        }, this))
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 536,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
-                                    style: {
-                                        marginTop: '20px'
-                                    },
-                                    children: "Property Photo"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 549,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "image-upload",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "file",
-                                            accept: "image/*",
-                                            onChange: handleImageChange
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 551,
-                                            columnNumber: 17
-                                        }, this),
-                                        imagePreview ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                            src: imagePreview,
-                                            alt: "Preview",
-                                            className: "image-preview"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 553,
-                                            columnNumber: 19
-                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "upload-icon",
-                                                    children: "📸"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 556,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "upload-text",
-                                                    children: "Click to upload a photo of your property"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 557,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "upload-hint",
-                                                    children: "JPG, PNG up to 5MB"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 558,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 550,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "modal-actions",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            className: "btn-cancel",
-                                            onClick: ()=>setShowHostelForm(false),
-                                            children: "Cancel"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 564,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "submit",
-                                            className: "btn-submit",
-                                            disabled: formLoading,
-                                            children: formLoading ? 'Submitting...' : 'Submit Property'
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 565,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 563,
+                                    lineNumber: 593,
                                     columnNumber: 15
                                 }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 485,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                    lineNumber: 481,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 480,
-                columnNumber: 9
-            }, this),
-            showRoomForm && selectedHostel && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "modal-overlay",
-                onClick: ()=>setShowRoomForm(false),
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "modal",
-                    onClick: (e)=>e.stopPropagation(),
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "modal-title",
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 592,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 588,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Full Address *",
+                        hint: mapsLoaded ? "✓ Autocomplete active — select from dropdown" : "Type address manually or add Maps API key for autocomplete",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            style: {
+                                position: 'relative'
+                            },
                             children: [
-                                "Add Room to ",
-                                selectedHostel.name
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 578,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "modal-sub",
-                            children: "Define the room type, capacity and pricing."
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 579,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                            onSubmit: handleSubmitRoom,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
-                                    children: "Room Type"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 582,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "room-types-grid",
-                                    children: ROOM_TYPES.map((rt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: `room-type-card ${roomForm.room_type === rt.value ? 'selected' : ''}`,
-                                            onClick: ()=>setRoomForm({
-                                                    ...roomForm,
-                                                    room_type: rt.value,
-                                                    capacity: rt.value.includes('2') ? '2' : rt.value.includes('3') ? '3' : rt.value.includes('4') ? '4' : '1'
-                                                }),
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "material-icons room-type-icon",
-                                                    style: {
-                                                        fontSize: '28px',
-                                                        color: '#1a56db'
-                                                    },
-                                                    children: rt.icon
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 590,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "room-type-label",
-                                                    children: rt.label
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 591,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "room-type-desc",
-                                                    children: rt.desc
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 592,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, rt.value, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 585,
-                                            columnNumber: 19
-                                        }, this))
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 583,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "section-divider",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    ref: addressInputRef,
+                                    className: "finput",
+                                    placeholder: "Type your hostel address in Tanzania...",
+                                    defaultValue: hostelForm.address,
+                                    onChange: (e)=>setHostelForm((f)=>({
+                                                ...f,
+                                                address: e.target.value
+                                            })),
                                     style: {
-                                        marginTop: '20px'
-                                    },
-                                    children: "Room Details"
+                                        paddingRight: '36px'
+                                    }
                                 }, void 0, false, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 597,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-row-3",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "form-group",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "form-label",
-                                                    children: "Price Per Semester (TZS) — per person"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 600,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    className: "form-input",
-                                                    type: "number",
-                                                    placeholder: "400000",
-                                                    value: roomForm.price_per_month,
-                                                    onChange: (e)=>setRoomForm({
-                                                            ...roomForm,
-                                                            price_per_month: e.target.value
-                                                        }),
-                                                    required: true
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 601,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 599,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "form-group",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "form-label",
-                                                    children: "Capacity (persons)"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 604,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    className: "form-input",
-                                                    type: "number",
-                                                    min: "1",
-                                                    max: "10",
-                                                    placeholder: "1",
-                                                    value: roomForm.capacity,
-                                                    onChange: (e)=>setRoomForm({
-                                                            ...roomForm,
-                                                            capacity: e.target.value
-                                                        }),
-                                                    required: true
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 605,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 603,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "form-group",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "form-label",
-                                                    children: "Available Rooms"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 608,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    className: "form-input",
-                                                    type: "number",
-                                                    min: "1",
-                                                    placeholder: "5",
-                                                    value: roomForm.available_count,
-                                                    onChange: (e)=>setRoomForm({
-                                                            ...roomForm,
-                                                            available_count: e.target.value
-                                                        }),
-                                                    required: true
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                                    lineNumber: 609,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 607,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
                                     lineNumber: 598,
                                     columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "form-group",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            className: "form-label",
-                                            children: "Room Description (optional)"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 613,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                            className: "form-textarea",
-                                            placeholder: "Describe the room, what is included...",
-                                            value: roomForm.description,
-                                            onChange: (e)=>setRoomForm({
-                                                    ...roomForm,
-                                                    description: e.target.value
-                                                })
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 614,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "material-icons-round",
+                                    style: {
+                                        position: 'absolute',
+                                        right: '10px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        fontSize: '16px',
+                                        color: mapsLoaded ? '#10b981' : '#94a3b8'
+                                    },
+                                    children: mapsLoaded ? 'my_location' : 'location_on'
+                                }, void 0, false, {
                                     fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 612,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "modal-actions",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            className: "btn-cancel",
-                                            onClick: ()=>setShowRoomForm(false),
-                                            children: "Cancel"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 618,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "submit",
-                                            className: "btn-submit",
-                                            disabled: formLoading || !roomForm.room_type,
-                                            children: formLoading ? 'Adding...' : 'Add Room'
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                            lineNumber: 619,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                                    lineNumber: 617,
+                                    lineNumber: 606,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                            lineNumber: 581,
+                            lineNumber: 597,
                             columnNumber: 13
                         }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                    lineNumber: 577,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 596,
+                        columnNumber: 11
+                    }, this),
+                    hostelForm.latitude && hostelForm.longitude && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            background: '#f0fdf4',
+                            border: '1px solid #bbf7d0',
+                            borderRadius: '8px',
+                            padding: '8px 12px',
+                            marginBottom: '14px',
+                            fontSize: '12px',
+                            color: '#065f46',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "material-icons-round",
+                                style: {
+                                    fontSize: '14px'
+                                },
+                                children: "check_circle"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 614,
+                                columnNumber: 15
+                            }, this),
+                            "GPS coordinates auto-detected: ",
+                            hostelForm.latitude,
+                            ", ",
+                            hostelForm.longitude
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 613,
+                        columnNumber: 13
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "form-grid2",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Distance from University (km)",
+                                hint: "Auto-calculated when you pick address + university",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    style: {
+                                        display: 'flex',
+                                        gap: '6px'
+                                    },
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            className: "finput",
+                                            type: "number",
+                                            step: "0.1",
+                                            placeholder: "e.g. 0.5",
+                                            value: hostelForm.distance_from_university,
+                                            onChange: (e)=>setHostelForm((f)=>({
+                                                        ...f,
+                                                        distance_from_university: e.target.value
+                                                    })),
+                                            style: {
+                                                flex: 1
+                                            }
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                            lineNumber: 622,
+                                            columnNumber: 17
+                                        }, this),
+                                        autocompleteRef._lastLatLng && hostelForm.university_id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            title: "Auto-calculate distance",
+                                            onClick: ()=>autoCalcDistance(hostelForm.university_id),
+                                            style: {
+                                                background: '#eff6ff',
+                                                border: '1.5px solid #bfdbfe',
+                                                borderRadius: '8px',
+                                                padding: '0 10px',
+                                                cursor: 'pointer',
+                                                color: '#2563eb',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '4px',
+                                                fontSize: '12px',
+                                                fontWeight: '600',
+                                                whiteSpace: 'nowrap'
+                                            },
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "material-icons-round",
+                                                    style: {
+                                                        fontSize: '14px'
+                                                    },
+                                                    children: "straighten"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                                    lineNumber: 633,
+                                                    columnNumber: 21
+                                                }, this),
+                                                "Calc"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                            lineNumber: 628,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 621,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 620,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Transport Notes",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    placeholder: "e.g. Bus 34 stops 200m away, TZS 300",
+                                    value: hostelForm.transport_notes,
+                                    onChange: (e)=>setHostelForm((f)=>({
+                                                ...f,
+                                                transport_notes: e.target.value
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 640,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 639,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 619,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Description",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                            className: "finput ftextarea",
+                            placeholder: "Describe your hostel...",
+                            value: hostelForm.description,
+                            onChange: (e)=>setHostelForm((f)=>({
+                                        ...f,
+                                        description: e.target.value
+                                    }))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 646,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 645,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Amenities",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "amenity-picker",
+                            children: AMENITIES.map((a)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "button",
+                                    className: `amenity-opt ${hostelForm.amenities.includes(a) ? 'selected' : ''}`,
+                                    onClick: ()=>toggleAmenity(a),
+                                    children: [
+                                        hostelForm.amenities.includes(a) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "material-icons-round",
+                                            style: {
+                                                fontSize: '12px'
+                                            },
+                                            children: "check"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                            lineNumber: 652,
+                                            columnNumber: 56
+                                        }, this),
+                                        a
+                                    ]
+                                }, a, true, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 651,
+                                    columnNumber: 17
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 649,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 648,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "modal-acts",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-cancel",
+                                onClick: ()=>setModal(null),
+                                children: "Cancel"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 659,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-primary",
+                                disabled: actionLoading,
+                                onClick: submitHostel,
+                                children: actionLoading ? 'Saving...' : modal.type === 'edit_hostel' ? 'Save Changes' : 'Submit for Review'
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 660,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 658,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
                 fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
-                lineNumber: 576,
+                lineNumber: 587,
+                columnNumber: 9
+            }, this),
+            (modal?.type === 'add_room' || modal?.type === 'edit_room') && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(BigModal, {
+                title: modal.type === 'edit_room' ? 'Edit Room' : 'Add Room',
+                onClose: ()=>setModal(null),
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "form-grid2",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Room Label *",
+                                hint: "e.g. A101, B205, Ground-03",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    placeholder: "A101",
+                                    value: roomForm.room_label,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                room_label: e.target.value.toUpperCase()
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 672,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 671,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Floor",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    placeholder: "Ground, 1st, 2nd...",
+                                    value: roomForm.floor,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                floor: e.target.value
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 675,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 674,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 670,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Room Type *",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "type-picker",
+                            children: ROOM_TYPES.map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "button",
+                                    className: `type-opt ${roomForm.room_type === t ? 'selected' : ''}`,
+                                    onClick: ()=>setRoomForm((f)=>({
+                                                ...f,
+                                                room_type: t,
+                                                capacity: ROOM_CAPACITIES[t] || 1
+                                            })),
+                                    children: t
+                                }, t, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 681,
+                                    columnNumber: 17
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 679,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 678,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "form-grid3",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Capacity (persons)",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    type: "number",
+                                    min: "1",
+                                    max: "20",
+                                    value: roomForm.capacity,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                capacity: parseInt(e.target.value) || 1
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 690,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 689,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Price / Semester (TZS) *",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    type: "number",
+                                    placeholder: "400000",
+                                    value: roomForm.price_per_semester,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                price_per_semester: e.target.value
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 693,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 692,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                                label: "Number of Rooms",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    className: "finput",
+                                    type: "number",
+                                    min: "0",
+                                    value: roomForm.available_count,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                available_count: parseInt(e.target.value) || 0
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 696,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 695,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 688,
+                        columnNumber: 11
+                    }, this),
+                    roomForm.price_per_semester > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "price-hint",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "material-icons-round",
+                                style: {
+                                    fontSize: '14px'
+                                },
+                                children: "info"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 701,
+                                columnNumber: 15
+                            }, this),
+                            "Deposit = ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                children: [
+                                    "TZS ",
+                                    (parseFloat(roomForm.price_per_semester) * 0.5).toLocaleString()
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 702,
+                                columnNumber: 25
+                            }, this),
+                            " (50%) \\u00b7 Per person, per semester"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 700,
+                        columnNumber: 13
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Is Full?",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer',
+                                fontSize: '13px',
+                                color: '#475569'
+                            },
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    type: "checkbox",
+                                    checked: roomForm.available_count === 0 || roomForm.is_full,
+                                    onChange: (e)=>setRoomForm((f)=>({
+                                                ...f,
+                                                is_full: e.target.checked,
+                                                available_count: e.target.checked ? 0 : f.available_count || 1
+                                            }))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                    lineNumber: 707,
+                                    columnNumber: 15
+                                }, this),
+                                "Mark this room as full (no more bookings)"
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 706,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 705,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FormField, {
+                        label: "Description",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                            className: "finput ftextarea",
+                            placeholder: "Additional details about this specific room...",
+                            value: roomForm.description,
+                            onChange: (e)=>setRoomForm((f)=>({
+                                        ...f,
+                                        description: e.target.value
+                                    }))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 713,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 712,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "modal-acts",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-cancel",
+                                onClick: ()=>setModal(null),
+                                children: "Cancel"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 716,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-primary",
+                                disabled: actionLoading,
+                                onClick: submitRoom,
+                                children: actionLoading ? 'Saving...' : modal.type === 'edit_room' ? 'Save Changes' : 'Add Room'
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 717,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 715,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 669,
+                columnNumber: 9
+            }, this),
+            modal?.type === 'delete_account' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
+                title: "Delete Account",
+                onClose: ()=>setModal(null),
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            textAlign: 'center',
+                            padding: '8px 0 16px'
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "material-icons-round",
+                                style: {
+                                    fontSize: '40px',
+                                    color: '#ef4444',
+                                    display: 'block',
+                                    marginBottom: '12px'
+                                },
+                                children: "delete_forever"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 728,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                style: {
+                                    fontSize: '14px',
+                                    color: '#475569',
+                                    lineHeight: '1.7',
+                                    marginBottom: '16px'
+                                },
+                                children: "This will permanently delete your account, all your properties, and cancel all pending bookings."
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 729,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 727,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        className: "modal-input",
+                        type: "password",
+                        placeholder: "Your password",
+                        value: deletePassword,
+                        onChange: (e)=>setDeletePassword(e.target.value)
+                    }, void 0, false, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 733,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "modal-acts",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-cancel",
+                                onClick: ()=>setModal(null),
+                                children: "Cancel"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 735,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "modal-danger",
+                                disabled: actionLoading || !deletePassword,
+                                onClick: deleteAccount,
+                                children: actionLoading ? 'Deleting...' : 'Delete Forever'
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 736,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 734,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 726,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true);
 }
-_s(HostDashboard, "2QulE3qMPil+GN/9kaIkaWNHwgU=", false, function() {
+_s(HostDashboard, "QhdN7csZulVq2YvFmwTCcek+djM=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$context$2f$AuthContext$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"],
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
 });
 _c = HostDashboard;
-var _c;
+const Badge = ({ s })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+        style: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            background: s.bg,
+            color: s.color,
+            padding: '3px 9px',
+            borderRadius: '20px',
+            fontSize: '11px',
+            fontWeight: '600',
+            whiteSpace: 'nowrap'
+        },
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                style: {
+                    width: '5px',
+                    height: '5px',
+                    borderRadius: '50%',
+                    background: s.dot,
+                    display: 'inline-block'
+                }
+            }, void 0, false, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 748,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0)),
+            s.label
+        ]
+    }, void 0, true, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 747,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c1 = Badge;
+const FormField = ({ label, hint, children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "form-field",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                className: "form-label",
+                children: [
+                    label,
+                    hint && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "form-hint",
+                        children: [
+                            " \\u2014 ",
+                            hint
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                        lineNumber: 755,
+                        columnNumber: 51
+                    }, ("TURBOPACK compile-time value", void 0))
+                ]
+            }, void 0, true, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 755,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0)),
+            children
+        ]
+    }, void 0, true, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 754,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c2 = FormField;
+function Modal({ title, children, onClose }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "modal-overlay",
+        onClick: onClose,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "modal-box",
+            onClick: (e)=>e.stopPropagation(),
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "modal-head",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "modal-title",
+                            children: title
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 765,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            className: "modal-x",
+                            onClick: onClose,
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "material-icons-round",
+                                style: {
+                                    fontSize: '17px'
+                                },
+                                children: "close"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 766,
+                                columnNumber: 57
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 766,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                    lineNumber: 764,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "modal-body",
+                    children: children
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                    lineNumber: 768,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+            lineNumber: 763,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 762,
+        columnNumber: 5
+    }, this);
+}
+_c3 = Modal;
+function BigModal({ title, children, onClose }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "modal-overlay",
+        onClick: onClose,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "modal-box big",
+            onClick: (e)=>e.stopPropagation(),
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "modal-head",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "modal-title",
+                            children: title
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 779,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            className: "modal-x",
+                            onClick: onClose,
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "material-icons-round",
+                                style: {
+                                    fontSize: '17px'
+                                },
+                                children: "close"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                                lineNumber: 780,
+                                columnNumber: 57
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                            lineNumber: 780,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                    lineNumber: 778,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "modal-body modal-scroll",
+                    children: children
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                    lineNumber: 782,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+            lineNumber: 777,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 776,
+        columnNumber: 5
+    }, this);
+}
+_c4 = BigModal;
+const Spinner = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        style: {
+            width: '24px',
+            height: '24px',
+            border: '2px solid #e2e8f0',
+            borderTop: '2px solid #2563eb',
+            borderRadius: '50%',
+            animation: 'spin 0.7s linear infinite',
+            margin: '0 auto'
+        }
+    }, void 0, false, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 788,
+        columnNumber: 23
+    }, ("TURBOPACK compile-time value", void 0));
+_c5 = Spinner;
+const Loader = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        style: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100vh',
+            background: '#f8fafc'
+        },
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Spinner, {}, void 0, false, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 789,
+                columnNumber: 135
+            }, ("TURBOPACK compile-time value", void 0)),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$dormlink$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("style", {
+                children: `@keyframes spin{to{transform:rotate(360deg);}}`
+            }, void 0, false, {
+                fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+                lineNumber: 789,
+                columnNumber: 145
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/Desktop/dormlink/frontend/app/host/dashboard/page.js",
+        lineNumber: 789,
+        columnNumber: 22
+    }, ("TURBOPACK compile-time value", void 0));
+_c6 = Loader;
+const CSS = `
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#f8fafc;color:#0f172a;font-size:14px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .layout{display:flex;min-height:100vh;}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;backdrop-filter:blur(2px);}
+
+  .sidebar{width:236px;background:white;border-right:1px solid #f1f5f9;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform 0.25s cubic-bezier(.4,0,.2,1);}
+  .sb-brand{display:flex;align-items:center;gap:8px;padding:18px 16px 14px;border-bottom:1px solid #f8fafc;}
+  .sb-logo{width:28px;height:28px;background:linear-gradient(135deg,#1d4ed8,#2563eb);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sb-name{font-size:15px;font-weight:700;color:#0f172a;letter-spacing:-0.3px;}
+  .sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #f8fafc;}
+  .sb-av{width:34px;height:34px;background:linear-gradient(135deg,#f0fdf4,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#166534;flex-shrink:0;}
+  .sb-fullname{font-size:13px;font-weight:600;color:#0f172a;}
+  .sb-tag{font-size:10px;color:#94a3b8;margin-top:1px;text-transform:uppercase;letter-spacing:0.5px;}
+  .sb-nav{padding:10px 8px;flex:1;}
+  .sb-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;transition:all 0.15s;text-align:left;}
+  .sb-btn:hover{background:#f8fafc;color:#0f172a;}
+  .sb-btn.active{background:#eff6ff;color:#1d4ed8;font-weight:600;}
+  .sb-icon{font-size:17px!important;}
+  .sb-count{background:#ef4444;color:white;border-radius:20px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:auto;}
+  .sb-foot{padding:12px;border-top:1px solid #f8fafc;}
+  .sb-signout{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:1px solid #f1f5f9;padding:8px;border-radius:8px;font-size:12px;font-weight:500;color:#94a3b8;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .sb-signout:hover{border-color:#ef4444;color:#ef4444;}
+
+  .main{margin-left:236px;flex:1;display:flex;flex-direction:column;}
+  .topbar{background:white;border-bottom:1px solid #f1f5f9;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;}
+  .tb-left{display:flex;align-items:center;gap:10px;}
+  .tb-title{font-size:14px;font-weight:600;color:#0f172a;}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;color:#64748b;padding:2px;}
+  .back-btn{display:flex;align-items:center;background:#f1f5f9;border:none;border-radius:7px;padding:5px;cursor:pointer;color:#475569;transition:all 0.15s;}
+  .back-btn:hover{background:#e2e8f0;}
+  .tb-cta{display:inline-flex;align-items:center;gap:6px;background:#0f172a;color:white;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .tb-cta:hover{background:#1e293b;}
+
+  .content{padding:24px;flex:1;animation:fadeIn 0.3s ease;}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+  .stat{background:white;border:1px solid #f1f5f9;border-radius:12px;padding:16px;transition:all 0.2s;}
+  .stat:hover{border-color:#e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+  .stat.good{border-color:#d1fae5;background:#f0fdf4;}
+  .stat.warn{border-color:#fde68a;background:#fffbeb;}
+  .stat-icon{font-size:18px!important;color:#94a3b8;margin-bottom:10px;display:block;}
+  .stat.good .stat-icon{color:#10b981;}
+  .stat.warn .stat-icon{color:#f59e0b;}
+  .stat-n{font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.5px;}
+  .stat-l{font-size:12px;color:#94a3b8;margin-top:2px;}
+
+  .panel{background:white;border:1px solid #f1f5f9;border-radius:12px;overflow:hidden;}
+  .panel-hd{padding:16px 20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;}
+  .panel-title{font-size:14px;font-weight:600;color:#0f172a;}
+  .panel-sub{font-size:12px;color:#94a3b8;}
+
+  .hostel-list{divide-y:1px solid #f1f5f9;}
+  .hostel-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f9fafb;transition:background 0.15s;}
+  .hostel-row:last-child{border-bottom:none;}
+  .hostel-row:hover{background:#fafafa;}
+  .hostel-row-left{display:flex;align-items:center;gap:12px;flex:1;}
+  .hostel-icon{width:38px;height:38px;background:#f1f5f9;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .hostel-name{font-size:13px;font-weight:600;color:#0f172a;}
+  .hostel-meta{font-size:12px;color:#94a3b8;margin-top:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+  .hostel-row-right{display:flex;align-items:center;gap:8px;}
+
+  .hostel-summary-bar{background:white;border:1px solid #f1f5f9;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+
+  /* ROOMS GRID */
+  .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+  .room-tile{background:white;border:1px solid #f1f5f9;border-radius:12px;padding:14px;transition:all 0.2s;position:relative;}
+  .room-tile:hover{border-color:#e2e8f0;box-shadow:0 3px 12px rgba(0,0,0,0.06);}
+  .room-tile.full{opacity:0.65;background:#f8fafc;}
+  .room-tile.add-room-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-style:dashed;min-height:120px;}
+  .room-tile.add-room-tile:hover{border-color:#93c5fd;background:#eff6ff;}
+  .room-tile-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .room-label-badge{background:#0f172a;color:white;padding:3px 9px;border-radius:5px;font-size:12px;font-weight:700;letter-spacing:0.3px;font-family:monospace;}
+  .room-status-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+  .room-status-badge.full{background:#fee2e2;color:#991b1b;}
+  .room-status-badge.avail{background:#d1fae5;color:#065f46;}
+  .room-tile-type{font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px;}
+  .room-tile-meta{font-size:11px;color:#94a3b8;margin-bottom:8px;}
+  .room-tile-info{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+  .room-info-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#475569;}
+  .room-tile-desc{font-size:12px;color:#94a3b8;margin-bottom:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .room-features{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+  .room-feat-chip{background:#f1f5f9;color:#64748b;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;}
+  .room-tile-actions{display:flex;gap:6px;}
+
+  .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+  .act-row{display:flex;gap:4px;flex-wrap:wrap;}
+  .act-btn{border:none;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;}
+  .act-btn.blue{background:#dbeafe;color:#1e3a8a;}
+  .act-btn.blue:hover{background:#bfdbfe;}
+  .act-btn.green{background:#d1fae5;color:#065f46;}
+  .act-btn.green:hover{background:#a7f3d0;}
+  .act-btn.red{background:#fee2e2;color:#991b1b;}
+  .act-btn.red:hover{background:#fecaca;}
+  .act-btn.gray{background:#f1f5f9;color:#475569;}
+  .act-btn.gray:hover{background:#e2e8f0;}
+
+  .tbl-wrap{overflow-x:auto;}
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{text-align:left;font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.5px;text-transform:uppercase;padding:10px 16px;background:#fafafa;border-bottom:1px solid #f1f5f9;white-space:nowrap;}
+  .tbl td{padding:12px 16px;border-bottom:1px solid #f9fafb;vertical-align:middle;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl tr:hover td{background:#fafafa;}
+  .tbl tr.highlight td{background:#fffbeb;}
+  .cell-main{font-size:13px;font-weight:500;color:#0f172a;}
+  .cell-sub{font-size:12px;color:#94a3b8;margin-top:2px;}
+  td.cell-main{font-size:13px;font-weight:500;color:#0f172a;}
+  td.cell-sub{font-size:12px;color:#94a3b8;}
+
+  .mobile-cards{display:none;}
+  .m-card{padding:16px;border-bottom:1px solid #f1f5f9;}
+  .m-card:last-child{border-bottom:none;}
+  .m-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+  .m-hostel{font-size:14px;font-weight:600;color:#0f172a;}
+  .m-room{font-size:12px;color:#94a3b8;margin-top:2px;}
+  .m-actions{display:flex;gap:6px;}
+
+  .empty{padding:48px;text-align:center;color:#94a3b8;font-size:13px;}
+  .btn-primary{display:inline-flex;align-items:center;background:#0f172a;color:white;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-primary:hover{background:#1e293b;}
+
+  .acct-section{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9;}
+  .acct-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .acct-section-title{font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;}
+  .acct-info-row{display:flex;align-items:center;gap:12px;}
+  .danger-zone{background:#fff5f5;border:1px solid #fee2e2;border-radius:10px;padding:16px;}
+  .btn-danger-outline{display:inline-flex;align-items:center;gap:6px;background:white;border:1.5px solid #ef4444;color:#ef4444;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-danger-outline:hover{background:#fee2e2;}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
+  .modal-box{background:white;border-radius:14px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+  .modal-box.big{max-width:640px;}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid #f1f5f9;}
+  .modal-title{font-size:14px;font-weight:600;color:#0f172a;}
+  .modal-x{background:#f1f5f9;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;}
+  .modal-body{padding:18px;}
+  .modal-scroll{max-height:80vh;overflow-y:auto;}
+  .modal-input{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;outline:none;background:#f9fafb;margin-bottom:4px;transition:border 0.15s;}
+  .modal-input:focus{border-color:#2563eb;background:white;}
+  .modal-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+  .modal-cancel{background:#f1f5f9;color:#475569;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .modal-cancel:hover{background:#e2e8f0;}
+  .modal-primary{background:#0f172a;color:white;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .modal-primary:hover{background:#1e293b;}
+  .modal-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .modal-danger{background:#ef4444;color:white;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .modal-danger:hover{background:#dc2626;}
+  .modal-danger:disabled{opacity:0.5;cursor:not-allowed;}
+
+  /* FORM */
+  .form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .form-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .form-field{margin-bottom:14px;}
+  .form-label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px;}
+  .form-hint{font-weight:400;color:#94a3b8;}
+  .finput{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:#f9fafb;transition:border 0.15s;color:#0f172a;}
+  .finput:focus{border-color:#2563eb;background:white;}
+  .ftextarea{min-height:72px;resize:vertical;}
+  .amenity-picker{display:flex;flex-wrap:wrap;gap:6px;}
+  .amenity-opt{border:1.5px solid #e2e8f0;background:#f9fafb;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:500;color:#64748b;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:4px;}
+  .amenity-opt:hover{border-color:#93c5fd;color:#1d4ed8;}
+  .amenity-opt.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;font-weight:600;}
+  .type-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .type-opt{border:1.5px solid #e2e8f0;background:#f9fafb;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:500;color:#64748b;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;text-align:center;}
+  .type-opt:hover{border-color:#93c5fd;color:#1d4ed8;}
+  .type-opt.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;font-weight:600;}
+  .price-hint{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12px;color:#1d4ed8;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+
+  @media(max-width:1024px){.stats{grid-template-columns:repeat(2,1fr);}.form-grid3{grid-template-columns:1fr 1fr;}.rooms-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}}
+  @media(max-width:768px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);}
+    .main{margin-left:0;}
+    .hamburger{display:flex;}
+    .content{padding:16px;}
+    .topbar{padding:0 14px;}
+    .stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .tbl-wrap{display:none;}
+    .mobile-cards{display:block;}
+    .form-grid2,.form-grid3{grid-template-columns:1fr;}
+    .type-picker{grid-template-columns:1fr 1fr;}
+    .rooms-grid{grid-template-columns:repeat(2,1fr);}
+    .hostel-row-right{flex-direction:column;align-items:flex-end;gap:6px;}
+  }
+  @media(max-width:400px){.rooms-grid{grid-template-columns:1fr;}}
+`;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6;
 __turbopack_context__.k.register(_c, "HostDashboard");
+__turbopack_context__.k.register(_c1, "Badge");
+__turbopack_context__.k.register(_c2, "FormField");
+__turbopack_context__.k.register(_c3, "Modal");
+__turbopack_context__.k.register(_c4, "BigModal");
+__turbopack_context__.k.register(_c5, "Spinner");
+__turbopack_context__.k.register(_c6, "Loader");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
